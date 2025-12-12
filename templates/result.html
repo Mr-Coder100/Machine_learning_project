@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* Page Layout */
+body {
+    padding-top: 120px !important;
+}
+
+/* Page Title */
+.page-title {
+    font-size: 42px;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+    margin-bottom: 30px;
+}
+
+/* Glass Weather Card */
+.weather-glass-card {
+    background: rgba(255,255,255,0.22);
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.35);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    color: #fff;
+}
+
+/* Card Header */
+.weather-glass-card .card-header {
+    font-weight: 700;
+    background: rgba(255,255,255,0.18);
+    border-bottom: 1px solid rgba(255,255,255,0.35);
+    color: #fff;
+    border-radius: 15px 15px 0 0;
+    text-align: center;
+}
+
+/* Card Body */
+.weather-glass-card .card-body p {
+    font-size: 17px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.weather-glass-card .card-body em {
+    font-size: 16px;
+    color: #4eae3a;
+    font-weight: 600;
+}
+
+/* Forecast Text */
+.forecast-title small {
+    font-size: 18px;
+    color: #eee;
+}
+.forecast-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    margin-bottom: 25px;
+}
+
+/* Advice Box */
+.advice-box h4 {
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+</style>
+
+<!-- Page Title -->
+<h1 class="page-title">Weather Report</h1>
+
+<div class="container mt-4">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <!-- Weather Section -->
+            <section class="result text-center">
+
+                <h2 class="forecast-title">
+                    <small>Forecast for</small> {{ data[0] }}
+                </h2>
+
+                <div class="d-flex flex-wrap justify-content-center">
+
+                    <!-- Today -->
+                    <div class="card weather-glass-card m-3" style="width: 16rem;">
+                        <div class="card-header"><strong>Today</strong></div>
+                        <div class="card-body">
+                            <p>{{ data[1][0] }}</p>
+                            <em>Temperature: {{ data[1][1] }}°C</em>
+                        </div>
+                    </div>
+
+                    <!-- Tomorrow -->
+                    <div class="card weather-glass-card m-3" style="width: 16rem;">
+                        <div class="card-header"><strong>Tomorrow</strong></div>
+                        <div class="card-body">
+                            <p>{{ data[2][0] }}</p>
+                            <em>Temperature: {{ data[2][1] }}°C</em>
+                        </div>
+                    </div>
+
+                    <!-- Day After Tomorrow -->
+                    <div class="card weather-glass-card m-3" style="width: 16rem;">
+                        <div class="card-header"><strong>Day After Tomorrow</strong></div>
+                        <div class="card-body">
+                            <p>{{ data[3][0] }}</p>
+                            <em>Temperature: {{ data[3][1] }}°C</em>
+                        </div>
+                    </div>
+
+                    <!-- Next Day -->
+                    <div class="card weather-glass-card m-3" style="width: 16rem;">
+                        <div class="card-header"><strong>Next Day</strong></div>
+                        <div class="card-body">
+                            <p>{{ data[4][0] }}</p>
+                            <em>Temperature: {{ data[4][1] }}°C</em>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Advice -->
+            <div class="text-center mt-4 advice-box mb-5">
+                <h4 class="text-success">
+                    ✔ If no heavy rains are predicted, you can safely add fertilizers.
+                </h4>
+                <h4 class="text-danger mt-3">
+                    ⚠ If heavy rains are predicted, avoid adding fertilizers.
+                </h4>
+            </div>
+
+        </div>
+    </div>
+
+    <hr class="mt-5">
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,255 @@
+/* -----------------------------------------------------
+   GLOBAL STYLES
+----------------------------------------------------- */
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, rgba(255,255,255,0), rgba(200,200,200,0.25)),
+                url('../images/slider-01.jpg') no-repeat center/cover fixed;
+    padding-top: 90px;
+    margin: 0;
+}
+
+* {
+    transition: 0.3s ease;
+}
+
+/* -----------------------------------------------------
+   NAVBAR GLASS STYLE
+----------------------------------------------------- */
+
+.glass-nav {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.navbar {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    min-height: 65px !important;
+}
+
+#navItems {
+    gap: 25px !important;
+}
+
+.navbar-nav .nav-item {
+    white-space: nowrap !important;
+}
+
+/* Base menu styling */
+.nav-item .nav-link {
+    padding: 8px 12px;
+    color: #ffffff !important;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    font-size: 15px;
+    border-radius: 12px;
+}
+
+/* -----------------------------------------------------
+   NAVBAR HOVER (GLASS + GREEN ON ONLY ONE ITEM)
+----------------------------------------------------- */
+
+.nav-item.hover .nav-link {
+    color: #4eae3a !important;
+    transform: scale(1.12);
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.45);
+}
+
+.nav-item.left-neighbor .nav-link {
+    transform: translateX(-8px);
+    background: transparent !important;
+    color: #ffffff !important;
+}
+
+.nav-item.right-neighbor .nav-link {
+    transform: translateX(8px);
+    background: transparent !important;
+    color: #ffffff !important;
+}
+
+/* -----------------------------------------------------
+   OTHER UI ELEMENTS
+----------------------------------------------------- */
+
+.glass-card,
+.card {
+    background: rgba(255,255,255,0.20);
+    backdrop-filter: blur(20px);
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.35);
+    padding: 20px;
+    color: #000;
+}
+
+.btn-success,
+.btn-primary,
+.btn-secondary {
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.45);
+    padding: 10px 22px;
+    border-radius: 12px;
+    color: #000 !important;
+}
+
+input,
+select {
+    background: rgba(255,255,255,0.25);
+    padding: 10px 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.45);
+    width: 80%;
+    margin-bottom: 10px;
+}
+
+.footer {
+    background: rgba(0,0,0,0.35);
+    padding: 40px;
+    text-align: center;
+    color: #fff;
+}
+
+/* -----------------------------
+   GLASS SEARCH BAR UI
+------------------------------*/
+
+.glass-search {
+    backdrop-filter: blur(15px);
+    background: rgba(255,255,255,0.25);
+    border-radius: 16px;
+    padding: 6px;
+    border: 1px solid rgba(255,255,255,0.45);
+}
+
+.glass-input {
+    background: rgba(255,255,255,0.15) !important;
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 12px !important;
+    padding-left: 20px;
+    height: 48px;
+    color: #000;
+}
+
+/* -----------------------------
+   UPLOAD PAGE BUTTON
+------------------------------*/
+
+.glass-btn {
+    background: linear-gradient(135deg, #4eae3a, #5ccf4e);
+    border: none;
+    border-radius: 12px;
+    padding: 10px 25px;
+    color: white !important;
+    font-weight: 600;
+    transition: 0.3s ease-in-out;
+    height: 48px;
+}
+
+.glass-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+/* -----------------------------
+   WEATHER PAGE BUTTON (MATCH UPLOAD BUTTON)
+------------------------------*/
+
+.weather-btn {
+    width: 200px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.45);
+    padding: 12px 25px;
+    color: #000 !important;
+    font-weight: 600;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: 0.3s ease-in-out;
+}
+
+.weather-btn:hover {
+    background: linear-gradient(135deg, #4eae3a, #5ccf4e);
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+/* -----------------------------
+   GLASS FILE INPUT (UPLOAD PAGE)
+------------------------------*/
+
+.glass-file-input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.6);
+    color: #000;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    outline: none;
+    cursor: pointer;
+}
+
+.glass-file-input::file-selector-button,
+.glass-file-input::-webkit-file-upload-button {
+    margin-right: 14px;
+    padding: 8px 18px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #4eae3a, #5ccf4e);
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.glass-file-input::file-selector-button:hover,
+.glass-file-input::-webkit-file-upload-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.35);
+}
+
+/* -----------------------------
+   WEATHER PAGE — TEXT COLOR FIX
+------------------------------*/
+
+/* Typed input text should be WHITE */
+.weather-input {
+    color: #ffffff !important;
+}
+
+/* Placeholder should stay normal soft grey */
+.weather-input::placeholder {
+    color: #cccccc !important;
+}
+
+/* Forecast button text must remain WHITE always */
+.weather-btn {
+    color: #ffffff !important;
+}
+
+.weather-btn:hover {
+    color: #ffffff !important;
+}
+
+/* --- Navbar Alignment Fix (Safe – No UI changes except alignment) --- */
+
+.navbar-brand {
+    margin-right: auto !important;   /* Push YieldXpert fully left */
+}
+
+#navbarMenu {
+    margin-left: auto !important;    /* Push menu fully right */
+}
+
+#navItems {
+    gap: 25px !important;            /* Equal spacing between menu items */
+}
+

@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* Page Layout */
+body {
+    padding-top: 120px !important;
+}
+
+/* Page Title */
+.page-title {
+    font-size: 42px;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    margin-bottom: 25px;
+}
+
+/* Glass Form Box */
+.form-box {
+    max-width: 550px;
+    margin: auto;
+    padding: 30px;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.35);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+
+/* Labels */
+label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin-left: 5%;
+}
+
+/* Glass Dropdown */
+.dropdown-glass {
+    width: 90%;
+    margin: auto;
+    margin-top: 8px;
+    position: relative;
+}
+
+.dropdown-display {
+    padding: 12px;
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.45);
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+    color: #fff;
+}
+
+.dropdown-options {
+    display: none;
+    position: absolute;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.40);
+    border-radius: 12px;
+    backdrop-filter: blur(14px);
+    margin-top: 5px;
+    z-index: 999;
+}
+
+.dropdown-options div {
+    padding: 10px;
+    cursor: pointer;
+    color: #000;
+}
+
+.dropdown-options div:hover {
+    background: rgba(0,0,0,0.30);
+    color: #fff;
+}
+
+/* Input Field */
+input[type="text"] {
+    width: 90%;
+    margin-left: 5%;
+    padding: 12px;
+    margin-top: 10px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.45);
+    color: #fff;
+}
+
+/* Error Highlight */
+.error-field {
+    border: 2px solid red !important;
+}
+
+/* Submit Button — FINAL UPDATED */
+.glass-main-btn {
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.45);
+    padding: 12px 30px;
+    border-radius: 12px;
+    color: #fff !important;
+    font-weight: 700;
+    font-size: 17px;      /* ⬅ PERFECT BUTTON TEXT SIZE */
+    letter-spacing: 0.4px; /* ⬅ REDUCED SPACING FOR BALANCE */
+    backdrop-filter: blur(12px);
+    transition: 0.3s ease;
+}
+
+.glass-main-btn:hover {
+    background: linear-gradient(135deg, #4eae3a, #5ccf4e);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76,175,80,0.45);
+}
+
+/* Result Box */
+.result-box {
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 25px;
+    background: rgba(255,255,255,0.22);
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.35);
+    backdrop-filter: blur(16px);
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+
+.result-label {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.result-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #4eae3a;
+}
+</style>
+
+<!-- Page Title -->
+<h1 class="page-title">Crop Yield Prediction</h1>
+
+<!-- Form Box -->
+<div class="form-box">
+    <form id="yieldForm" action="{{ url_for('predict') }}" method="POST">
+
+        <!-- STATE -->
+        <label>State Name:</label>
+        <div class="dropdown-glass">
+            <div class="dropdown-display" onclick="toggleDropdown('state-options')">
+                Select State
+            </div>
+
+            <div id="state-options" class="dropdown-options">
+                <!-- FULL STATE LIST -->
+                <div onclick="choose(this,'state-input','0')">Andaman and Nicobar Islands</div>
+                <div onclick="choose(this,'state-input','1')">Andhra Pradesh</div>
+                <div onclick="choose(this,'state-input','3')">Assam</div>
+                <div onclick="choose(this,'state-input','4')">Goa</div>
+                <div onclick="choose(this,'state-input','5')">Karnataka</div>
+                <div onclick="choose(this,'state-input','6')">Kerala</div>
+                <div onclick="choose(this,'state-input','7')">Meghalaya</div>
+                <div onclick="choose(this,'state-input','8')">Puducherry</div>
+                <div onclick="choose(this,'state-input','9')">Tamil Nadu</div>
+                <div onclick="choose(this,'state-input','10')">West Bengal</div>
+                <div onclick="choose(this,'state-input','11')">Bihar</div>
+                <div onclick="choose(this,'state-input','12')">Chhattisgarh</div>
+                <div onclick="choose(this,'state-input','13')">Dadra and Nagar Haveli</div>
+                <div onclick="choose(this,'state-input','14')">Gujarat</div>
+                <div onclick="choose(this,'state-input','15')">Haryana</div>
+                <div onclick="choose(this,'state-input','16')">Madhya Pradesh</div>
+                <div onclick="choose(this,'state-input','17')">Maharashtra</div>
+                <div onclick="choose(this,'state-input','18')">Manipur</div>
+                <div onclick="choose(this,'state-input','19')">Rajasthan</div>
+                <div onclick="choose(this,'state-input','20')">Telangana</div>
+                <div onclick="choose(this,'state-input','21')">Uttar Pradesh</div>
+                <div onclick="choose(this,'state-input','22')">Arunachal Pradesh</div>
+                <div onclick="choose(this,'state-input','23')">Himachal Pradesh</div>
+                <div onclick="choose(this,'state-input','24')">Jammu and Kashmir</div>
+                <div onclick="choose(this,'state-input','25')">Nagaland</div>
+                <div onclick="choose(this,'state-input','26')">Odisha</div>
+                <div onclick="choose(this,'state-input','27')">Uttarakhand</div>
+                <div onclick="choose(this,'state-input','28')">Mizoram</div>
+                <div onclick="choose(this,'state-input','29')">Punjab</div>
+                <div onclick="choose(this,'state-input','30')">Tripura</div>
+                <div onclick="choose(this,'state-input','31')">Chandigarh</div>
+                <div onclick="choose(this,'state-input','32')">Jharkhand</div>
+                <div onclick="choose(this,'state-input','33')">Sikkim</div>
+            </div>
+
+            <input type="hidden" id="state-input" name="State_Name">
+        </div>
+
+        <br>
+
+        <!-- CROP -->
+        <label>Crop:</label>
+        <div class="dropdown-glass">
+            <div class="dropdown-display" onclick="toggleDropdown('crop-options')">Select Crop</div>
+
+            <div id="crop-options" class="dropdown-options">
+                <div onclick="choose(this,'crop-input','0')">Arecanut</div>
+                <div onclick="choose(this,'crop-input','1')">Banana</div>
+                <div onclick="choose(this,'crop-input','2')">Dry chillies</div>
+                <div onclick="choose(this,'crop-input','3')">Coconut</div>
+                <div onclick="choose(this,'crop-input','4')">Cotton</div>
+                <div onclick="choose(this,'crop-input','5')">Dry ginger</div>
+                <div onclick="choose(this,'crop-input','6')">Groundnut</div>
+                <div onclick="choose(this,'crop-input','7')">Maize</div>
+                <div onclick="choose(this,'crop-input','8')">Moong (Green Gram)</div>
+                <div onclick="choose(this,'crop-input','9')">Onion</div>
+                <div onclick="choose(this,'crop-input','10')">Paddy</div>
+                <div onclick="choose(this,'crop-input','11')">Ragi</div>
+                <div onclick="choose(this,'crop-input','12')">Sugarcane</div>
+                <div onclick="choose(this,'crop-input','13')">Tobacco</div>
+                <div onclick="choose(this,'crop-input','14')">Turmeric</div>
+                <div onclick="choose(this,'crop-input','15')">Rice</div>
+            </div>
+
+            <input type="hidden" id="crop-input" name="Crop">
+        </div>
+
+        <br>
+
+        <!-- SOIL -->
+        <label>Soil Type:</label>
+        <div class="dropdown-glass">
+            <div class="dropdown-display" onclick="toggleDropdown('soil-options')">Select Soil</div>
+
+            <div id="soil-options" class="dropdown-options">
+                <div onclick="choose(this,'soil-input','0')">Sandy</div>
+                <div onclick="choose(this,'soil-input','1')">Red</div>
+                <div onclick="choose(this,'soil-input','2')">Black</div>
+                <div onclick="choose(this,'soil-input','3')">Clayey</div>
+                <div onclick="choose(this,'soil-input','4')">Alluvial</div>
+                <div onclick="choose(this,'soil-input','5')">Loamy</div>
+                <div onclick="choose(this,'soil-input','6')">Laterite</div>
+            </div>
+
+            <input type="hidden" id="soil-input" name="soil_type">
+        </div>
+
+        <br>
+
+        <!-- AREA -->
+        <label>Area (acres):</label>
+        <input id="areaInput" type="text" name="Area" placeholder="Enter area in acres">
+
+        <br><br>
+
+        <center>
+            <button type="submit" class="glass-main-btn">Predict</button>
+        </center>
+
+    </form>
+</div>
+
+<!-- RESULTS -->
+{% if prediction_text and yield_predictions %}
+<div class="result-box">
+    <p class="result-label">Production:</p>
+    <p class="result-value">{{ prediction_text }} KGs</p>
+
+    <p class="result-label">Yield:</p>
+    <p class="result-value">{{ yield_predictions }} KGs/acre</p>
+</div>
+{% endif %}
+
+<!-- Dropdown + Validation Script -->
+<script>
+function toggleDropdown(id) {
+    let box = document.getElementById(id);
+    box.style.display = (box.style.display === "block") ? "none" : "block";
+}
+
+function choose(el, inputId, value) {
+    el.parentNode.previousElementSibling.innerText = el.innerText;
+    document.getElementById(inputId).value = value;
+    el.parentNode.style.display = "none";
+}
+
+/* Validation without popup */
+document.getElementById("yieldForm").addEventListener("submit", function(e) {
+    let state = document.getElementById("state-input").value;
+    let crop = document.getElementById("crop-input").value;
+    let soil = document.getElementById("soil-input").value;
+    let area = document.getElementById("areaInput").value.trim();
+
+    let valid = true;
+
+    if (state === "") {
+        document.querySelector("[onclick=\"toggleDropdown('state-options')\"]").classList.add("error-field");
+        valid = false;
+    }
+    if (crop === "") {
+        document.querySelector("[onclick=\"toggleDropdown('crop-options')\"]").classList.add("error-field");
+        valid = false;
+    }
+    if (soil === "") {
+        document.querySelector("[onclick=\"toggleDropdown('soil-options')\"]").classList.add("error-field");
+        valid = false;
+    }
+    if (area === "") {
+        document.getElementById("areaInput").classList.add("error-field");
+        valid = false;
+    }
+
+    if (!valid) e.preventDefault();
+});
+</script>
+
+{% endblock %}

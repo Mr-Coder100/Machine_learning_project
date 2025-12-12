@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Header -->
+<header class="slider-main">
+    <div class="carousel slide carousel-fade">
+
+        <div class="carousel-inner">
+            <div class="carousel-item active"
+                 style="background-image: url('../static/images/slider-06.jpg')">
+                <div class="carousel-caption d-none d-md-block">
+                    <h2>Crop Recommender System Using Machine Learning Approach</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container mt-5">
+
+    <div class="services-bar text-center">
+        <h1 class="my-4">Preview</h1>
+    </div>
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-10">
+
+            <!-- DataFrame Preview Table -->
+            <div class="card glass-card p-4">
+                {{ df_view.to_html(classes="table table-striped table-bordered", na_rep="-") | safe }}
+            </div>
+
+            <!-- Train/Test Button -->
+            <div class="text-center mt-4">
+                <button onclick="hideLoader()" class="btn btn-primary btn-lg">
+                    Click to Train | Test
+                </button>
+
+                <div id="loading" style="display:none; margin-top:20px;">
+                    <span class="text-primary">Processing...</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <hr class="mt-5">
+
+</div>
+
+<!-- Loader Script -->
+<script>
+function hideLoader() {
+    $('#loading').show(0).delay(1000).hide(0, function() {
+        alert("Training finished!");
+        window.location = "{{ url_for('yield_prediction') }}";
+    });
+}
+</script>
+
+{% endblock %}

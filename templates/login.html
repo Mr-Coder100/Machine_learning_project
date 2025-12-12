@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* Page Layout */
+body {
+    padding-top: 120px !important;
+}
+
+/* Page Title */
+.page-title {
+    font-size: 42px;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+    margin-bottom: 25px;
+}
+
+/* Glass Form Box */
+.form-box {
+    max-width: 450px;
+    margin: auto;
+    padding: 30px;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.35);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+
+/* Labels */
+label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+}
+
+/* Input fields */
+.glass-input {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.45);
+    color: #fff;
+    margin-top: 5px;
+    backdrop-filter: blur(12px);
+}
+
+/* Login Button - Improved Visibility */
+.glass-main-btn {
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.45);
+    padding: 12px 20px;        /* smaller width */
+    border-radius: 12px;
+    color: #fff !important;
+    font-weight: 800;          /* bolder text */
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(12px);
+    transition: 0.3s ease;
+    width: 45%;                /* reduced width */
+    text-shadow: 0 0 6px rgba(0,0,0,0.6);
+}
+
+.glass-main-btn:hover {
+    background: linear-gradient(135deg, #4eae3a, #5ccf4e);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76,175,80,0.45);
+}
+</style>
+
+<!-- PAGE TITLE -->
+<h1 class="page-title">Login</h1>
+
+<!-- GLASS LOGIN FORM -->
+<div class="form-box">
+
+    <label><b>Username</b></label>
+    <input type="text" id="uname" class="glass-input" placeholder="Enter username">
+
+    <br><br>
+
+    <label><b>Password</b></label>
+    <input type="password" id="pwd" class="glass-input" placeholder="Enter password">
+
+    <br><br>
+
+    <center>
+        <button class="glass-main-btn" onclick="login()">Login</button>
+    </center>
+
+</div>
+
+<!-- Login Script -->
+<script>
+function login() {
+    var uname = document.getElementById("uname").value;
+    var pwd = document.getElementById("pwd").value;
+
+    if (uname === "admin" && pwd === "admin") {
+        alert("Login Success!");
+        window.location = "{{ url_for('upload') }}";
+    } else {
+        alert("Invalid Credentials!");
+    }
+}
+</script>
+
+{% endblock %}

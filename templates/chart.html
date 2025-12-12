@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* REDUCE TOP EMPTY SPACE */
+body {
+    padding-top: 70px !important;
+}
+
+/* PAGE TITLE */
+.chart-page-title {
+    font-size: 42px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    text-align: center !important;
+    margin-top: 45px !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.45) !important;
+}
+
+/* FLEX CONTAINER FOR SIDE-BY-SIDE CHARTS */
+.chart-container-row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 40px; /* space between cards */
+    margin-top: 30px !important;
+    flex-wrap: wrap; /* responsive stacking */
+}
+
+/* GLASS CARD BOX */
+.glass-chart-box {
+    width: 45% !important;
+    min-width: 380px !important;
+    padding: 25px !important;
+
+    background: rgba(255,255,255,0.22) !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(255,255,255,0.35) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.28) !important;
+
+    text-align: center !important;
+}
+
+/* CHART TITLE */
+.chart-heading {
+    color: #ffffff !important;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    margin-bottom: 15px !important;
+}
+
+/* CHART TEXT COLOR */
+svg text {
+    fill: white !important;
+}
+
+.card-header {
+    background: transparent !important;
+    color: white !important;
+    font-weight: 700 !important;
+}
+</style>
+
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script>
+/* BAR CHART */
+google.charts.load("current", {packages:['corechart']});
+google.charts.setOnLoadCallback(drawBarChart);
+
+function drawBarChart() {
+    var data = google.visualization.arrayToDataTable([
+        ["Crop", "Area", { role: "style" }],
+        ["Rice", 5000, "#b87333"],
+        ["Paddy", 4000, "#76A7FA"],
+        ["Cotton", 3500, "gold"],
+        ["Coconut", 2000, "#703593"],
+        ["Sugarcane", 2260, "#0000FF"]
+    ]);
+
+    var view = new google.visualization.DataView(data);
+    view.setColumns([0, 1, { calc: "stringify", sourceColumn: 1, type: "string", role: "annotation" }, 2]);
+
+    var options = {
+        backgroundColor: "transparent",
+        legend: { position: "none", textStyle: { color: 'white' } },
+        annotations: { textStyle: { color: 'white' } },
+        hAxis: { textStyle: {color: 'white'} },
+        vAxis: { textStyle: {color: 'white'} }
+    };
+
+    var chart = new google.visualization.ColumnChart(
+        document.getElementById("bar_chart")
+    );
+    chart.draw(view, options);
+}
+
+/* PIE CHART */
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawPieChart);
+
+function drawPieChart() {
+    var data = google.visualization.arrayToDataTable([
+        ['Soil Type', 'Area'],
+        ['Clayey', 11],
+        ['Alluvial', 2],
+        ['Red', 2],
+        ['Black', 2],
+        ['Sandy', 7]
+    ]);
+
+    var options = {
+        backgroundColor: "transparent",
+        legend: { textStyle: { color: 'white' } },
+        pieSliceTextStyle: { color: 'white' }
+    };
+
+    var pieChart = new google.visualization.PieChart(
+        document.getElementById('pie_chart')
+    );
+    pieChart.draw(data, options);
+}
+</script>
+
+<h1 class="chart-page-title">Charts Overview</h1>
+
+<!-- 🔥 SIDE-BY-SIDE CHART CARDS -->
+<div class="chart-container-row">
+
+    <!-- BAR CHART CARD -->
+    <div class="glass-chart-box">
+        <h3 class="chart-heading">Crop Area Distribution</h3>
+        <div id="bar_chart" style="width: 100%; height: 400px;"></div>
+    </div>
+
+    <!-- PIE CHART CARD -->
+    <div class="glass-chart-box">
+        <h3 class="chart-heading">Soil Occupied Area</h3>
+        <div id="pie_chart" style="width: 100%; height: 400px;"></div>
+    </div>
+
+</div>
+
+{% endblock %}

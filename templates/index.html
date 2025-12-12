@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Hero Slider -->
+<header class="slider-main">
+    <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-ride="carousel">
+
+        <ol class="carousel-indicators">
+            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        </ol>
+
+        <div class="carousel-inner">
+
+            <!-- Slide 1 -->
+            <div class="carousel-item active"
+                 style="background-image: url('../static/images/slider-01.jpg')">
+                <div class="carousel-caption d-none d-md-block">
+                    <h3>Crop Recommender System Using Machine Learning</h3>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="carousel-item"
+                 style="background-image: url('../static/images/slider-02.jpg')">
+                <div class="carousel-caption d-none d-md-block">
+                    <h3>Accurate & Intelligent Crop Predictions</h3>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="carousel-item"
+                 style="background-image: url('../static/images/slider-03.jpg')">
+                 
+                <div class="carousel-caption d-none d-md-block">
+                    <h3>Enhancing Agriculture with AI Insights</h3>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Controls -->
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+
+    </div>
+</header>
+
+{% endblock %}

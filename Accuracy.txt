@@ -1,0 +1,11 @@
+crop Yield:
+
+Algorithm: Random Forest Regressor
+
+Accuracy score: 0.9684
+
+crop recommendation:
+
+Algorithm: Random Forest Classifier
+
+Accuracy score: 0.875623

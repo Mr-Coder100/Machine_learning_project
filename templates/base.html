@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ title if title else "Crop Recommender System" }}</title>
+
+    <!-- Bootstrap -->
+    <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Fontawesome -->
+    <link href="../static/css/all.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link href="../static/css/styles.css" rel="stylesheet">
+    <link href="../static/css/glass.css" rel="stylesheet">
+</head>
+
+<body>
+
+    {% include 'navbar.html' %}
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- <footer class="footer mt-5">
+        <div class="container bottom_border">
+            <div class="row"></div>
+        </div>
+
+        <div class="container text-center">
+            <img src="../static/images/footer-logo.png" alt="">
+        </div>
+    </footer> -->
+
+    <!-- JS -->
+    <script src="../static/vendor/jquery/jquery.min.js"></script>
+    <script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- NAVBAR HOVER FOR ALL PAGES -->
+    <script>
+    const items = document.querySelectorAll("#navItems .nav-item");
+
+    items.forEach((item, index) => {
+        item.addEventListener("mouseenter", () => {
+            items.forEach(i => i.classList.remove("hover", "left-neighbor", "right-neighbor"));
+            item.classList.add("hover");
+            if (index > 0) items[index - 1].classList.add("left-neighbor");
+            if (index < items.length - 1) items[index + 1].classList.add("right-neighbor");
+        });
+
+        item.addEventListener("mouseleave", () => {
+            items.forEach(i => i.classList.remove("hover", "left-neighbor", "right-neighbor"));
+        });
+    });
+    </script>
+
+</body>
+</html>

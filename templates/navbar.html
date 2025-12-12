@@ -1,0 +1,30 @@
+<nav class="navbar fixed-top navbar-expand-lg glass-nav shadow-sm">
+    <div class="container d-flex justify-content-between align-items-center">
+
+        <!-- Brand (LEFT SIDE) -->
+        <a class="navbar-brand font-weight-bold" href="{{ url_for('index') }}">
+            <span style="color:#007bff; font-size: 22px;">AgroGuide</span>
+        </a>
+
+        <!-- Toggle button (for mobile) -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu">
+            <span class="fas fa-bars" style="color:#333;"></span>
+        </button>
+
+        <!-- Menu (RIGHT SIDE) -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarMenu">
+            <ul class="navbar-nav d-flex align-items-center" id="navItems">
+
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">HOME</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('homepage') }}">WEATHER</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('chart') }}">CHARTS</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('upload') }}">UPLOAD DATA</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('yield_prediction') }}">YIELD PREDICTION</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('crop_prediction') }}">CROP RECOMMENDATION</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">LOGIN</a></li>
+
+            </ul>
+        </div>
+
+    </div>
+</nav>

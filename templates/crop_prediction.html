@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* Page Layout */
+body {
+    padding-top: 120px !important;
+}
+
+/* Page Title */
+.page-title {
+    font-size: 42px;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    margin-bottom: 25px;
+}
+
+/* Glass Form Box */
+.form-box {
+    max-width: 550px;
+    margin: auto;
+    padding: 30px;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.35);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.28);
+}
+
+/* Labels */
+label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin-left: 5%;
+}
+
+/* Glass Dropdown */
+.dropdown-glass {
+    width: 90%;
+    margin: auto;
+    margin-top: 8px;
+    position: relative;
+}
+
+.dropdown-display {
+    padding: 12px;
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.45);
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+    color: #fff;
+}
+
+.dropdown-options {
+    display: none;
+    position: absolute;
+    width: 100%;
+    max-height: 180px;
+    overflow-y: auto;
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.40);
+    border-radius: 12px;
+    backdrop-filter: blur(14px);
+    margin-top: 5px;
+    z-index: 999;
+}
+
+.dropdown-options div {
+    padding: 10px;
+    cursor: pointer;
+    color: #000;
+}
+
+.dropdown-options div:hover {
+    background: rgba(0,0,0,0.30);
+    color: #fff;
+}
+
+/* Input Field */
+input[type="text"] {
+    width: 90%;
+    margin-left: 5%;
+    padding: 12px;
+    margin-top: 10px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.45);
+    color: #fff;
+}
+
+/* Error Highlight */
+.error-field {
+    border: 2px solid red !important;
+}
+
+/* Button Wrapper */
+.button-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Submit Button */
+.glass-main-btn {
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.45);
+    padding: 12px 40px;
+    border-radius: 12px;
+    color: #fff !important;
+    font-weight: 700;
+    font-size: 17px;
+    backdrop-filter: blur(12px);
+    transition: 0.3s ease;
+    display: inline-block;
+}
+
+.glass-main-btn:hover {
+    background: linear-gradient(135deg, #4eae3a, #5ccf4e);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76,175,80,0.45);
+}
+
+/* RESULT BOX – same as Yield Prediction */
+.result-box {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 25px;
+    background: rgba(255,255,255,0.22);
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.35);
+    backdrop-filter: blur(16px);
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+
+.result-label {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.result-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: #4eae3a;
+}
+</style>
+
+<!-- Page Title -->
+<h1 class="page-title">Crop Recommendation</h1>
+
+<!-- Form Box -->
+<div class="form-box">
+    <form id="recommendForm" action="{{ url_for('sandy') }}" method="POST">
+
+        <!-- STATE -->
+        <label>State</label>
+        <div class="dropdown-glass">
+            <div class="dropdown-display" onclick="toggleDropdown('state-options')">Select State</div>
+
+            <div id="state-options" class="dropdown-options">
+                {% for i, state in [
+                    (0,"Andaman and Nicobar Islands"), (1,"Andhra Pradesh"),
+                    (3,"Assam"), (4,"Goa"), (5,"Karnataka"), (6,"Kerala"),
+                    (7,"Meghalaya"), (8,"Puducherry"), (9,"Tamil Nadu"),
+                    (10,"West Bengal"), (11,"Bihar"), (12,"Chhattisgarh"),
+                    (13,"Dadra and Nagar Haveli"), (14,"Gujarat"), (15,"Haryana"),
+                    (16,"Madhya Pradesh"), (17,"Maharashtra"), (18,"Manipur"),
+                    (19,"Rajasthan"), (20,"Telangana"), (21,"Uttar Pradesh"),
+                    (22,"Arunachal Pradesh"), (23,"Himachal Pradesh"),
+                    (24,"Jammu and Kashmir"), (25,"Nagaland"), (26,"Odisha"),
+                    (27,"Uttarakhand"), (28,"Mizoram"), (29,"Punjab"),
+                    (30,"Tripura"), (31,"Chandigarh"), (32,"Jharkhand"),
+                    (33,"Sikkim")
+                ] %}
+                <div onclick="choose(this,'state-input','{{ i }}')">{{ state }}</div>
+                {% endfor %}
+            </div>
+
+            <input type="hidden" id="state-input" name="State_Name">
+        </div>
+
+        <br>
+
+        <!-- SOIL -->
+        <label>Soil Type</label>
+        <div class="dropdown-glass">
+            <div class="dropdown-display" onclick="toggleDropdown('soil-options')">Select Soil</div>
+
+            <div id="soil-options" class="dropdown-options">
+                <div onclick="choose(this,'soil-input','0')">Sandy</div>
+                <div onclick="choose(this,'soil-input','1')">Red</div>
+                <div onclick="choose(this,'soil-input','2')">Black</div>
+                <div onclick="choose(this,'soil-input','3')">Clayey</div>
+                <div onclick="choose(this,'soil-input','4')">Alluvial</div>
+                <div onclick="choose(this,'soil-input','5')">Loamy</div>
+                <div onclick="choose(this,'soil-input','6')">Laterite</div>
+            </div>
+
+            <input type="hidden" id="soil-input" name="soil_type">
+        </div>
+
+        <br>
+
+        <!-- AREA -->
+        <label>Area (in acres)</label>
+        <input id="areaInput" type="text" name="Area" placeholder="Enter Area">
+
+        <div class="button-wrapper">
+            <button type="submit" class="glass-main-btn">Get Recommendation</button>
+        </div>
+
+    </form>
+</div>
+
+<!-- RESULT BOX -->
+{% if prediction_texts %}
+<div class="result-box">
+    <p class="result-label">Recommended Crop:</p>
+    <p class="result-value">{{ prediction_texts }}</p>
+</div>
+{% endif %}
+
+<script>
+function toggleDropdown(id) {
+    let box = document.getElementById(id);
+    box.style.display = (box.style.display === "block") ? "none" : "block";
+}
+
+function choose(el, inputId, value) {
+    el.parentNode.previousElementSibling.innerText = el.innerText;
+    document.getElementById(inputId).value = value;
+    el.parentNode.style.display = "none";
+}
+
+document.getElementById("recommendForm").addEventListener("submit", function(e) {
+    let state = document.getElementById("state-input").value;
+    let soil = document.getElementById("soil-input").value;
+    let area = document.getElementById("areaInput").value.trim();
+
+    let valid = true;
+
+    if (state === "") {
+        document.querySelector("[onclick=\"toggleDropdown('state-options')\"]").classList.add("error-field");
+        valid = false;
+    }
+    if (soil === "") {
+        document.querySelector("[onclick=\"toggleDropdown('soil-options')\"]").classList.add("error-field");
+        valid = false;
+    }
+    if (area === "") {
+        document.getElementById("areaInput").classList.add("error-field");
+        valid = false;
+    }
+
+    if (!valid) e.preventDefault();
+});
+</script>
+
+{% endblock %}
