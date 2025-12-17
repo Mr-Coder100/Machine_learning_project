@@ -46,6 +46,7 @@ def yield_prediction():
 
 
 
+
 @app.route("/predict",methods = ["POST"])
 def predict():
     if request.method == "POST":
