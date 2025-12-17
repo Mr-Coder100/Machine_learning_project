@@ -1,0 +1,90 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* Page Layout */
+body {
+    padding-top: 120px !important;
+}
+
+/* Page Title */
+.page-title {
+    font-size: 42px;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+    margin-bottom: 25px;
+}
+
+/* Glass Box */
+.form-box {
+    max-width: 450px;
+    margin: auto;
+    padding: 30px;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.35);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    text-align: center;
+}
+
+/* Button */
+.glass-main-btn {
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.45);
+    padding: 12px 20px;
+    border-radius: 12px;
+    color: #fff !important;
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(12px);
+    transition: 0.3s ease;
+    width: 70%;
+    text-shadow: 0 0 6px rgba(0,0,0,0.6);
+}
+
+.glass-main-btn:hover {
+    background: linear-gradient(135deg, #4eae3a, #5ccf4e);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76,175,80,0.45);
+}
+
+/* Message Text */
+.future-text {
+    margin-top: 25px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+    display: none;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+</style>
+
+<!-- PAGE TITLE -->
+<h1 class="page-title">Feature Page</h1>
+
+<!-- GLASS BOX -->
+<div class="form-box">
+
+    <button class="glass-main-btn" onclick="showMessage()">
+        Click Here
+    </button>
+
+    <div id="futureMsg" class="future-text">
+        To be implemented in future!!
+    </div>
+
+</div>
+
+<!-- SCRIPT -->
+<script>
+function showMessage() {
+    document.getElementById("futureMsg").style.display = "block";
+}
+</script>
+
+{% endblock %}

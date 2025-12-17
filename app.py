@@ -91,6 +91,10 @@ def sandy():
 def homepage():
     return render_template('homepage.html')
 
+@app.route("/fertilizer")
+def fertilizer():
+    return render_template("fertilizer.html")
+
 @app.route('/result', methods=['POST', 'GET'])
 def result_page():
     if request.method == 'POST':
