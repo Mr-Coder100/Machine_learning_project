@@ -44,6 +44,8 @@ def preview():
 def yield_prediction():
     return render_template('yield_prediction.html')
 
+
+
 @app.route("/predict",methods = ["POST"])
 def predict():
     if request.method == "POST":
