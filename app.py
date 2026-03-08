@@ -14,6 +14,8 @@ w = Weather(app.config)
 
 model = pickle.load(open('yield.pkl', 'rb'))
 crop = pickle.load(open('crop.pkl', 'rb'))
+fertilizer_model    = pickle.load(open('fertilizer.pkl', 'rb'))
+fertilizer_encoders = pickle.load(open('fertilizer_encoders.pkl', 'rb'))
 
 @app.route('/')
 
@@ -27,7 +29,42 @@ def login():
 def chart():
 	return render_template('chart.html')
  
-   
+@app.route('/fertilizer', methods=['GET', 'POST'])
+def fertilizer():
+    result = None
+    error = None
+
+    if request.method == 'POST':
+        try:
+            # Collect form inputs
+            temperature  = float(request.form['temperature'])
+            humidity     = float(request.form['humidity'])
+            moisture     = float(request.form['moisture'])
+            soil_type    = request.form['soil_type']
+            crop_type    = request.form['crop_type']
+            nitrogen     = float(request.form['nitrogen'])
+            potassium    = float(request.form['potassium'])
+            phosphorous  = float(request.form['phosphorous'])
+
+            # Encode categorical values
+            soil_enc  = fertilizer_encoders['soil'].transform([soil_type])[0]
+            crop_enc  = fertilizer_encoders['crop'].transform([crop_type])[0]
+
+            # Prepare input array (same column order as training)
+            features = np.array([[temperature, humidity, moisture,
+                                   soil_enc, crop_enc,
+                                   nitrogen, potassium, phosphorous]])
+
+            # Predict
+            pred_encoded = fertilizer_model.predict(features)[0]
+            result = fertilizer_encoders['fertilizer'].inverse_transform([pred_encoded])[0]
+
+        except ValueError as e:
+            error = f"Invalid input: {e}"
+        except Exception as e:
+            error = f"Error: {e}"
+
+    return render_template('fertilizer.html', result=result, error=error)   
 @app.route('/upload') 
 def upload():
 	return render_template('upload.html') 
