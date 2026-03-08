@@ -1,5 +1,6 @@
 from flask import Flask, render_template, flash,redirect
 import joblib
+import os
 from flask import request
 import numpy as np
 import pickle
@@ -146,4 +147,5 @@ def result_page():
     else:
         return redirect(url_for('homepage'))    
 if __name__ == "__main__":
-    app.run(debug=True)
+    
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=False)
