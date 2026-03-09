@@ -1,221 +1,272 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fertilizer Recommender</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
-    <style>
-        body {
-            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', sans-serif;
-        }
-        .navbar-brand, .nav-link {
-            color: #2e7d32 !important;
-            font-weight: 600;
-        }
-        .card {
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.10);
-        }
-        .card-header {
-            background: linear-gradient(90deg, #2e7d32, #66bb6a);
-            color: white;
-            border-radius: 16px 16px 0 0 !important;
-            padding: 1.2rem 1.5rem;
-        }
-        .btn-predict {
-            background: linear-gradient(90deg, #2e7d32, #66bb6a);
-            color: white;
-            border: none;
-            padding: 10px 35px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: opacity 0.2s;
-        }
-        .btn-predict:hover { opacity: 0.88; color: white; }
-        .result-box {
-            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-            border-left: 5px solid #2e7d32;
-            border-radius: 10px;
-            padding: 1.2rem 1.5rem;
-            margin-top: 1.5rem;
-        }
-        .result-box h4 { color: #2e7d32; font-weight: 700; }
-        .result-box .fertilizer-name {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #1b5e20;
-        }
-        .error-box {
-            background: #fdecea;
-            border-left: 5px solid #e53935;
-            border-radius: 10px;
-            padding: 1rem 1.5rem;
-            margin-top: 1.5rem;
-            color: #c62828;
-        }
-        .form-label { font-weight: 500; color: #333; }
-        .section-title {
-            color: #2e7d32;
-            font-weight: 700;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem;
-            margin-top: 1rem;
-        }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
-    <a class="navbar-brand" href="/">🌱 AgroML</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="/crop">Crop Recommender</a></li>
-            <li class="nav-item"><a class="nav-link" href="/yield">Yield Predictor</a></li>
-            <li class="nav-item"><a class="nav-link active fw-bold" href="/fertilizer">Fertilizer Recommender</a></li>
-        </ul>
-    </div>
-</nav>
+<style>
+body { padding-top: 120px !important; }
 
-<!-- Main Content -->
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
+.page-title {
+    font-size: 42px;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    margin-bottom: 25px;
+}
 
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="mb-0">🧪 Fertilizer Recommender</h4>
-                    <small class="opacity-75">Enter soil & crop details to get the best fertilizer recommendation</small>
-                </div>
-                <div class="card-body p-4">
+.form-box {
+    max-width: 580px;
+    margin: auto;
+    padding: 30px;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.35);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
 
-                    <form method="POST" action="/fertilizer">
+label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin-left: 5%;
+}
 
-                        <!-- Environmental Parameters -->
-                        <p class="section-title">🌡️ Environmental Parameters</p>
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label">Temperature (°C)</label>
-                                <input type="number" step="0.1" name="temperature" class="form-control"
-                                       placeholder="e.g. 28" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Humidity (%)</label>
-                                <input type="number" step="0.1" name="humidity" class="form-control"
-                                       placeholder="e.g. 60" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Moisture (%)</label>
-                                <input type="number" step="0.1" name="moisture" class="form-control"
-                                       placeholder="e.g. 45" required>
-                            </div>
-                        </div>
+.dropdown-glass {
+    width: 90%;
+    margin: auto;
+    margin-top: 8px;
+    position: relative;
+}
 
-                        <!-- Soil & Crop -->
-                        <p class="section-title mt-3">🌾 Soil & Crop</p>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Soil Type</label>
-                                <select name="soil_type" class="form-select" required>
-                                    <option value="" disabled selected>Select soil type</option>
-                                    <option value="Black">Black</option>
-                                    <option value="Clayey">Clayey</option>
-                                    <option value="Loamy">Loamy</option>
-                                    <option value="Red">Red</option>
-                                    <option value="Sandy">Sandy</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Crop Type</label>
-                                <select name="crop_type" class="form-select" required>
-                                    <option value="" disabled selected>Select crop type</option>
-                                    <option value="Barley">Barley</option>
-                                    <option value="Cotton">Cotton</option>
-                                    <option value="Ground Nuts">Ground Nuts</option>
-                                    <option value="Maize">Maize</option>
-                                    <option value="Millets">Millets</option>
-                                    <option value="Oil seeds">Oil seeds</option>
-                                    <option value="Paddy">Paddy</option>
-                                    <option value="Pulses">Pulses</option>
-                                    <option value="Sugarcane">Sugarcane</option>
-                                    <option value="Tobacco">Tobacco</option>
-                                    <option value="Wheat">Wheat</option>
-                                </select>
-                            </div>
-                        </div>
+.dropdown-display {
+    padding: 12px;
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.45);
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+    color: #fff;
+}
 
-                        <!-- Nutrient Levels -->
-                        <p class="section-title mt-3">🧬 Soil Nutrient Levels (kg/ha)</p>
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label">Nitrogen (N)</label>
-                                <input type="number" step="1" name="nitrogen" class="form-control"
-                                       placeholder="e.g. 37" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Potassium (K)</label>
-                                <input type="number" step="1" name="potassium" class="form-control"
-                                       placeholder="e.g. 10" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Phosphorous (P)</label>
-                                <input type="number" step="1" name="phosphorous" class="form-control"
-                                       placeholder="e.g. 20" required>
-                            </div>
-                        </div>
+.dropdown-options {
+    display: none;
+    position: absolute;
+    width: 100%;
+    max-height: 180px;
+    overflow-y: auto;
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.40);
+    border-radius: 12px;
+    backdrop-filter: blur(14px);
+    margin-top: 5px;
+    z-index: 999;
+}
 
-                        <div class="text-center mt-4">
-                            <button type="submit" class="btn btn-predict">🔍 Recommend Fertilizer</button>
-                        </div>
-                    </form>
+.dropdown-options div { padding: 10px; cursor: pointer; color: #000; }
+.dropdown-options div:hover { background: rgba(0,0,0,0.30); color: #fff; }
 
-                    <!-- Result -->
-                    {% if result %}
-                    <div class="result-box text-center">
-                        <h4>✅ Recommended Fertilizer</h4>
-                        <div class="fertilizer-name mt-2">{{ result }}</div>
-                        <p class="text-muted mt-2 mb-0">Based on your soil and crop conditions</p>
-                    </div>
-                    {% endif %}
+.row-label {
+    display: flex;
+    width: 90%;
+    margin: 12px auto 0;
+    gap: 12px;
+}
+.row-label span { flex: 1; font-size: 15px; font-weight: 600; color: #fff; }
 
-                    <!-- Error -->
-                    {% if error %}
-                    <div class="error-box">
-                        ⚠️ <strong>Error:</strong> {{ error }}
-                    </div>
-                    {% endif %}
+.input-row {
+    display: flex;
+    width: 90%;
+    margin: 8px auto 0;
+    gap: 12px;
+}
+.input-row .input-col { flex: 1; }
+.input-row .input-col input {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.45);
+    color: #fff;
+}
+.input-row .input-col input::placeholder { color: rgba(255,255,255,0.7); }
 
-                </div>
-            </div>
+.glass-main-btn {
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.45);
+    padding: 12px 40px;
+    border-radius: 12px;
+    color: #fff !important;
+    font-weight: 700;
+    font-size: 17px;
+    backdrop-filter: blur(12px);
+    transition: 0.3s ease;
+    display: inline-block;
+}
+.glass-main-btn:hover {
+    background: linear-gradient(135deg, #4eae3a, #5ccf4e);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76,175,80,0.45);
+}
 
-            <!-- Info Card -->
-            <div class="card mt-4">
-                <div class="card-body p-4">
-                    <h6 class="fw-bold text-success">ℹ️ About this Recommender</h6>
-                    <p class="text-muted mb-0" style="font-size: 0.9rem;">
-                        This tool uses a <strong>Random Forest Classifier</strong> trained on soil, crop, and environmental
-                        data to recommend the most suitable fertilizer. It can predict from 7 fertilizer types:
-                        <strong>Urea, DAP, 28-28, 14-35-14, 20-20, 17-17-17, 10-26-26</strong>.
-                        The model achieves <strong>95% accuracy</strong> on test data.
-                    </p>
-                </div>
-            </div>
+.result-box {
+    max-width: 580px;
+    margin: 40px auto;
+    padding: 25px;
+    background: rgba(255,255,255,0.22);
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.35);
+    backdrop-filter: blur(16px);
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+.result-label { font-size: 22px; font-weight: 600; color: #fff; }
+.result-value { font-size: 28px; font-weight: 800; color: #4eae3a; margin-top: 8px; }
 
+.error-box {
+    max-width: 580px;
+    margin: 20px auto;
+    padding: 15px 25px;
+    background: rgba(200,50,50,0.3);
+    border-radius: 12px;
+    border: 1px solid rgba(255,100,100,0.4);
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+    backdrop-filter: blur(12px);
+}
+
+.error-field { border: 2px solid red !important; }
+</style>
+
+<h1 class="page-title">Fertilizer Recommendation</h1>
+
+<div class="form-box">
+    <form id="fertForm" action="{{ url_for('fertilizer') }}" method="POST">
+
+        <!-- Temperature / Humidity / Moisture -->
+        <div class="row-label">
+            <span>Temperature (°C)</span>
+            <span>Humidity (%)</span>
+            <span>Moisture (%)</span>
         </div>
-    </div>
+        <div class="input-row">
+            <div class="input-col">
+                <input type="number" step="0.1" id="tempInput" name="temperature" placeholder="e.g. 28">
+            </div>
+            <div class="input-col">
+                <input type="number" step="0.1" id="humInput" name="humidity" placeholder="e.g. 60">
+            </div>
+            <div class="input-col">
+                <input type="number" step="0.1" id="moistInput" name="moisture" placeholder="e.g. 45">
+            </div>
+        </div>
+
+        <br>
+
+        <!-- Soil Type -->
+        <label>Soil Type</label>
+        <div class="dropdown-glass">
+            <div class="dropdown-display" onclick="toggleDropdown('soil-options')">Select Soil</div>
+            <div id="soil-options" class="dropdown-options">
+                <div onclick="choose(this,'soil-input','Black')">Black</div>
+                <div onclick="choose(this,'soil-input','Clayey')">Clayey</div>
+                <div onclick="choose(this,'soil-input','Loamy')">Loamy</div>
+                <div onclick="choose(this,'soil-input','Red')">Red</div>
+                <div onclick="choose(this,'soil-input','Sandy')">Sandy</div>
+            </div>
+            <input type="hidden" id="soil-input" name="soil_type">
+        </div>
+
+        <br>
+
+        <!-- Crop Type -->
+        <label>Crop Type</label>
+        <div class="dropdown-glass">
+            <div class="dropdown-display" onclick="toggleDropdown('crop-options')">Select Crop</div>
+            <div id="crop-options" class="dropdown-options">
+                <div onclick="choose(this,'crop-input','Barley')">Barley</div>
+                <div onclick="choose(this,'crop-input','Cotton')">Cotton</div>
+                <div onclick="choose(this,'crop-input','Ground Nuts')">Ground Nuts</div>
+                <div onclick="choose(this,'crop-input','Maize')">Maize</div>
+                <div onclick="choose(this,'crop-input','Millets')">Millets</div>
+                <div onclick="choose(this,'crop-input','Oil seeds')">Oil seeds</div>
+                <div onclick="choose(this,'crop-input','Paddy')">Paddy</div>
+                <div onclick="choose(this,'crop-input','Pulses')">Pulses</div>
+                <div onclick="choose(this,'crop-input','Sugarcane')">Sugarcane</div>
+                <div onclick="choose(this,'crop-input','Tobacco')">Tobacco</div>
+                <div onclick="choose(this,'crop-input','Wheat')">Wheat</div>
+            </div>
+            <input type="hidden" id="crop-input" name="crop_type">
+        </div>
+
+        <br>
+
+        <!-- Nitrogen / Potassium / Phosphorous -->
+        <div class="row-label">
+            <span>Nitrogen (N)</span>
+            <span>Potassium (K)</span>
+            <span>Phosphorous (P)</span>
+        </div>
+        <div class="input-row">
+            <div class="input-col">
+                <input type="number" step="1" id="nitroInput" name="nitrogen" placeholder="e.g. 37">
+            </div>
+            <div class="input-col">
+                <input type="number" step="1" id="potInput" name="potassium" placeholder="e.g. 10">
+            </div>
+            <div class="input-col">
+                <input type="number" step="1" id="phosInput" name="phosphorous" placeholder="e.g. 20">
+            </div>
+        </div>
+
+        <br>
+
+        <div style="text-align:center; margin-top: 10px;">
+            <button type="submit" class="glass-main-btn">Get Recommendation</button>
+        </div>
+
+    </form>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+{% if result %}
+<div class="result-box">
+    <p class="result-label">Recommended Fertilizer</p>
+    <p class="result-value">{{ result }}</p>
+</div>
+{% endif %}
+
+{% if error %}
+<div class="error-box">⚠️ {{ error }}</div>
+{% endif %}
+
+<script>
+function toggleDropdown(id) {
+    let box = document.getElementById(id);
+    box.style.display = (box.style.display === "block") ? "none" : "block";
+}
+
+function choose(el, inputId, value) {
+    el.parentNode.previousElementSibling.innerText = el.innerText;
+    document.getElementById(inputId).value = value;
+    el.parentNode.style.display = "none";
+}
+
+document.getElementById("fertForm").addEventListener("submit", function(e) {
+    let valid = true;
+    ["tempInput","humInput","moistInput","nitroInput","potInput","phosInput"].forEach(function(id) {
+        let el = document.getElementById(id);
+        if (el.value.trim() === "") { el.classList.add("error-field"); valid = false; }
+    });
+    if (document.getElementById("soil-input").value === "") {
+        document.querySelector("[onclick=\"toggleDropdown('soil-options')\"]").classList.add("error-field");
+        valid = false;
+    }
+    if (document.getElementById("crop-input").value === "") {
+        document.querySelector("[onclick=\"toggleDropdown('crop-options')\"]").classList.add("error-field");
+        valid = false;
+    }
+    if (!valid) e.preventDefault();
+});
+</script>
+
+{% endblock %}

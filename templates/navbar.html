@@ -12,14 +12,13 @@
         <div class="collapse navbar-collapse justify-content-between" id="navbarMenu">
             <ul class="navbar-nav d-flex align-items-center" id="navItems">
                  <a class="navbar-brand font-weight-bold" href="{{ url_for('index') }}">
-            <span style="color:#007bff; font-size: 25px; ">AgroGuide</span>
+            <span style="color:#007bff; font-size: 25px; margin-right: 40px;">AgroGuide</span>
         </a>
                 
 
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">HOME</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('homepage') }}">WEATHER</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('chart') }}">CHARTS</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('upload') }}">UPLOAD DATA</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('yield_prediction') }}">YIELD PREDICTION</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('crop_prediction') }}">CROP RECOMMENDATION</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('fertilizer') }}">FERTILIZER</a></li>
