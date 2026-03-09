@@ -2,6 +2,32 @@
 {% block content %}
 
 <!-- Hero Slider -->
+ <div style="
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
+">
+    <h1 style="
+        font-size: 5rem;
+        font-weight: 800;
+        background: linear-gradient(90deg, #007bff, #00c6ff, #4ade80, #007bff);
+        background-size: 300%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradientShift 4s ease infinite;
+    ">AgroGuide</h1>
+</div>
+
+<style>
+@keyframes gradientShift {
+    0%   { background-position: 0%; }
+    50%  { background-position: 100%; }
+    100% { background-position: 0%; }
+}
+</style>
 <header class="slider-main">
     <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-ride="carousel">
 

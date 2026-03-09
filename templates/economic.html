@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 style="color:#fff; font-size:2.5rem; font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,0.3);">
+            💰 Economic Analysis
+        </h1>
+        <p style="color:rgba(255,255,255,0.85); font-size:1.1rem;">Government Schemes, Subsidies & Loan Information for Farmers</p>
+    </div>
+
+    <!-- Govt Schemes Section -->
+    <h3 style="color:#fff; margin-bottom:20px; text-shadow:0 1px 6px rgba(0,0,0,0.3);">📋 Key Government Schemes</h3>
+    <div class="row mb-5">
+
+        <div class="col-md-4 mb-4">
+            <div class="glass-card h-100 p-4">
+                <div style="font-size:2rem; margin-bottom:10px;">🌾</div>
+                <h5 style="color:#4ade80; font-weight:700;">PM-KISAN</h5>
+                <p style="color:rgba(255,255,255,0.85); font-size:0.9rem;">Pradhan Mantri Kisan Samman Nidhi — ₹6,000/year direct income support to small & marginal farmers in 3 installments.</p>
+                <a href="https://pmkisan.gov.in" target="_blank" class="btn btn-sm" style="background:rgba(74,222,128,0.2); color:#4ade80; border:1px solid #4ade80;">Apply / Check Status →</a>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="glass-card h-100 p-4">
+                <div style="font-size:2rem; margin-bottom:10px;">🏦</div>
+                <h5 style="color:#60a5fa; font-weight:700;">Kisan Credit Card (KCC)</h5>
+                <p style="color:rgba(255,255,255,0.85); font-size:0.9rem;">Short-term credit up to ₹3 lakh at 4% interest for crop cultivation, post-harvest expenses & maintenance.</p>
+                <a href="https://www.nabard.org/content.aspx?id=572" target="_blank" class="btn btn-sm" style="background:rgba(96,165,250,0.2); color:#60a5fa; border:1px solid #60a5fa;">Learn More →</a>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="glass-card h-100 p-4">
+                <div style="font-size:2rem; margin-bottom:10px;">🛡️</div>
+                <h5 style="color:#f59e0b; font-weight:700;">PMFBY (Crop Insurance)</h5>
+                <p style="color:rgba(255,255,255,0.85); font-size:0.9rem;">Pradhan Mantri Fasal Bima Yojana — comprehensive crop insurance at just 1.5–2% premium for Kharif & Rabi crops.</p>
+                <a href="https://pmfby.gov.in" target="_blank" class="btn btn-sm" style="background:rgba(245,158,11,0.2); color:#f59e0b; border:1px solid #f59e0b;">Enroll Now →</a>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="glass-card h-100 p-4">
+                <div style="font-size:2rem; margin-bottom:10px;">💧</div>
+                <h5 style="color:#a78bfa; font-weight:700;">PM Krishi Sinchayee Yojana</h5>
+                <p style="color:rgba(255,255,255,0.85); font-size:0.9rem;">Subsidies for drip & sprinkler irrigation systems. Helps achieve "Har Khet Ko Pani, More Crop Per Drop."</p>
+                <a href="https://pmksy.gov.in" target="_blank" class="btn btn-sm" style="background:rgba(167,139,250,0.2); color:#a78bfa; border:1px solid #a78bfa;">Learn More →</a>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="glass-card h-100 p-4">
+                <div style="font-size:2rem; margin-bottom:10px;">🧪</div>
+                <h5 style="color:#34d399; font-weight:700;">Soil Health Card Scheme</h5>
+                <p style="color:rgba(255,255,255,0.85); font-size:0.9rem;">Free soil testing & health cards to help farmers use the right amount of nutrients and reduce input costs.</p>
+                <a href="https://soilhealth.dac.gov.in" target="_blank" class="btn btn-sm" style="background:rgba(52,211,153,0.2); color:#34d399; border:1px solid #34d399;">Check Your Soil →</a>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="glass-card h-100 p-4">
+                <div style="font-size:2rem; margin-bottom:10px;">🏗️</div>
+                <h5 style="color:#fb7185; font-weight:700;">NABARD Farm Loans</h5>
+                <p style="color:rgba(255,255,255,0.85); font-size:0.9rem;">Long-term loans for land development, farm mechanization, horticulture, and allied activities through NABARD.</p>
+                <a href="https://www.nabard.org" target="_blank" class="btn btn-sm" style="background:rgba(251,113,133,0.2); color:#fb7185; border:1px solid #fb7185;">Explore Loans →</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Live News Section -->
+    <h3 style="color:#fff; margin-bottom:20px; text-shadow:0 1px 6px rgba(0,0,0,0.3);">📰 Latest Policy & Subsidy News</h3>
+    <div id="news-container" class="row">
+        <div class="col-12 text-center py-4">
+            <div class="spinner-border text-light" role="status"></div>
+            <p style="color:rgba(255,255,255,0.7); margin-top:10px;">Fetching latest news...</p>
+        </div>
+    </div>
+    {% if news_error %}
+    <div class="glass-card p-3 text-center">
+        <p style="color:rgba(255,255,255,0.7);">⚠️ Could not load live news. Please check your API key.</p>
+    </div>
+    {% endif %}
+    {% if articles %}
+    <div id="news-container" class="row">
+        {% for article in articles %}
+        <div class="col-md-4 mb-4">
+            <div class="glass-card h-100 p-4">
+                {% if article.urlToImage %}
+                <img src="{{ article.urlToImage }}" alt="news" style="width:100%; height:150px; object-fit:cover; border-radius:10px; margin-bottom:12px;">
+                {% endif %}
+                <h6 style="color:#fff; font-weight:600;">{{ article.title[:80] }}{% if article.title|length > 80 %}...{% endif %}</h6>
+                <p style="color:rgba(255,255,255,0.7); font-size:0.82rem;">{{ article.description[:100] if article.description else '' }}...</p>
+                <a href="{{ article.url }}" target="_blank" style="color:#60a5fa; font-size:0.85rem;">Read more →</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.glass-card {
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease;
+}
+.glass-card:hover {
+    transform: translateY(-4px);
+}
+</style>
+
+<script>
+// Hide spinner if Flask already rendered articles
+document.addEventListener('DOMContentLoaded', function() {
+    const spinner = document.querySelector('#news-container .spinner-border');
+    if (spinner) {
+        const parent = spinner.closest('#news-container');
+    }
+});
+</script>
+{% endblock %}

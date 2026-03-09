@@ -7,7 +7,7 @@ import pickle
 import pandas as pd
 from flask import Flask, render_template, request, redirect, url_for
 from weather import Weather, WeatherException
-
+import requests
 app = Flask(__name__)
 
 app.config.from_pyfile('config/config.cfg')
@@ -29,6 +29,56 @@ def login():
 @app.route('/chart') 
 def chart():
 	return render_template('chart.html')
+
+
+# 2. Add your NewsAPI key (get free key from https://newsapi.org)
+NEWS_API_KEY = "2001e039d621410785e82413e47a2d9c"  # Replace with your key
+
+
+# ============================================================
+# ROUTE 1: Economic Analysis
+# ============================================================
+@app.route('/economic')
+def economic():
+    articles = []
+    news_error = False
+    try:
+        if NEWS_API_KEY != "YOUR_NEWSAPI_KEY_HERE":
+            url = f"https://newsapi.org/v2/everything?q=india+farmer+subsidy+scheme&language=en&sortBy=publishedAt&pageSize=6&apiKey={NEWS_API_KEY}"
+            response = requests.get(url, timeout=5)
+            data = response.json()
+            if data.get('status') == 'ok':
+                articles = data.get('articles', [])
+    except Exception:
+        news_error = True
+    return render_template('economic.html', articles=articles, news_error=news_error)
+
+
+# ============================================================
+# ROUTE 2: Sustainable Farming
+# ============================================================
+@app.route('/sustainable')
+def sustainable():
+    return render_template('sustainable.html')
+
+
+# ============================================================
+# ROUTE 3: Farmer Events & Information
+# ============================================================
+@app.route('/events')
+def events():
+    articles = []
+    try:
+        if NEWS_API_KEY != "YOUR_NEWSAPI_KEY_HERE":
+            url = f"https://newsapi.org/v2/everything?q=india+agriculture+farmer+news&language=en&sortBy=publishedAt&pageSize=9&apiKey={NEWS_API_KEY}"
+            response = requests.get(url, timeout=5)
+            data = response.json()
+            if data.get('status') == 'ok':
+                articles = data.get('articles', [])
+    except Exception:
+        pass
+    return render_template('farmer_events.html', articles=articles)
+
  
 @app.route('/fertilizer', methods=['GET', 'POST'])
 def fertilizer():
