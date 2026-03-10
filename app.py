@@ -16,6 +16,8 @@ app.secret_key = 'agroguide_secret_key'
 app.config.from_pyfile('config/config.cfg')
 w = Weather(app.config)
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 model = pickle.load(open('yield.pkl', 'rb'))
 crop = pickle.load(open('crop.pkl', 'rb'))
 fertilizer_model    = pickle.load(open('fertilizer.pkl', 'rb'))
