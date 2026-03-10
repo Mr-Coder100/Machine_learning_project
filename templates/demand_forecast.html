@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 style="color:#fff; font-size:2.5rem; font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,0.3);">
+            📊 Crop Demand Forecasting
+        </h1>
+        <p style="color:rgba(255,255,255,0.85); font-size:1.1rem;">Predict market demand for your crop before the season</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="glass-card p-4 mb-4">
+                <h5 style="color:#4ade80; margin-bottom:20px;">Enter Parameters</h5>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Select Crop</label>
+                    <select name="crop" class="form-control glass-input" id="crop" required>
+                        <option value="">-- Select Crop --</option>
+                        <option value="Wheat">Wheat</option>
+                        <option value="Rice">Rice</option>
+                        <option value="Maize">Maize</option>
+                        <option value="Cotton">Cotton</option>
+                        <option value="Sugarcane">Sugarcane</option>
+                        <option value="Pulses">Pulses</option>
+                        <option value="Mustard">Mustard</option>
+                        <option value="Soybean">Soybean</option>
+                        <option value="Groundnut">Groundnut</option>
+                        <option value="Barley">Barley</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Season</label>
+                    <select name="season" class="form-control glass-input" id="season" required>
+                        <option value="">-- Select Season --</option>
+                        <option value="Kharif">Kharif (June–Oct)</option>
+                        <option value="Rabi">Rabi (Nov–Mar)</option>
+                        <option value="Zaid">Zaid (Mar–June)</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Expected Rainfall (mm)</label>
+                    <input type="number" name="rainfall" class="form-control glass-input" id="rainfall" placeholder="e.g. 800" min="100" max="2000">
+                    <small style="color:rgba(255,255,255,0.45);">Average annual: 1200mm India</small>
+                </div>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Previous Season Price (₹/Quintal)</label>
+                    <input type="number" name="prev_price" class="form-control glass-input" id="prev_price" placeholder="e.g. 2300">
+                </div>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">National Production (Lakh Tonnes)</label>
+                    <input type="number" name="production" class="form-control glass-input" id="production" placeholder="e.g. 200">
+                </div>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Crop Area (Lakh Hectares)</label>
+                    <input type="number" name="area" class="form-control glass-input" id="area" placeholder="e.g. 100">
+                </div>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Export Demand Index (0–100)</label>
+                    <input type="number" name="export_demand" class="form-control glass-input" id="export_demand" placeholder="e.g. 50" min="0" max="100">
+                    <small style="color:rgba(255,255,255,0.45);">0 = no exports, 100 = very high export demand</small>
+                </div>
+
+                <button onclick="predict()" class="btn w-100 mt-2" style="background:linear-gradient(135deg,#007bff,#00c6ff); color:#fff; border:none; padding:12px; border-radius:10px; font-size:1rem; font-weight:600;">
+                    🔍 Predict Demand
+                </button>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <!-- Result -->
+            <div class="glass-card p-4 mb-4" id="result-card" style="display:none;">
+                <h5 style="color:#4ade80; margin-bottom:20px;">🎯 Demand Forecast Result</h5>
+
+                <div class="text-center mb-4">
+                    <div id="demand-badge" style="display:inline-block; padding:20px 50px; border-radius:20px; margin-bottom:15px;">
+                        <div id="demand-label" style="font-size:2.5rem; font-weight:800;"></div>
+                        <div style="color:rgba(255,255,255,0.8); font-size:0.9rem;">Predicted Market Demand</div>
+                    </div>
+                    <div id="demand-desc" style="color:rgba(255,255,255,0.8); font-size:0.95rem; max-width:400px; margin:0 auto;"></div>
+                </div>
+
+                <div id="recommendation" style="background:rgba(255,255,255,0.08); border-radius:12px; padding:20px;">
+                    <h6 style="color:#f59e0b; margin-bottom:12px;">💡 Recommendation</h6>
+                    <p id="rec-text" style="color:rgba(255,255,255,0.85); margin:0; line-height:1.7;"></p>
+                </div>
+            </div>
+
+            <!-- How it works -->
+            <div class="glass-card p-4">
+                <h5 style="color:#4ade80; margin-bottom:15px;">🤖 How This Works</h5>
+                <p style="color:rgba(255,255,255,0.8); font-size:0.9rem; line-height:1.7;">
+                    This forecast uses a <strong style="color:#60a5fa;">Random Forest ML model</strong> trained on agricultural data. It analyzes:
+                </p>
+                <ul style="color:rgba(255,255,255,0.75); font-size:0.88rem; line-height:2;">
+                    <li>Rainfall patterns & production data</li>
+                    <li>Previous season price trends</li>
+                    <li>Crop area under cultivation</li>
+                    <li>Export demand indicators</li>
+                </ul>
+                <p style="color:rgba(255,255,255,0.5); font-size:0.78rem;">* This is an advisory tool. Actual market conditions may vary.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.glass-card { background:rgba(0,0,0,0.45); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-radius:16px; border:1px solid rgba(255,255,255,0.15); box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+.glass-input { background:rgba(255,255,255,0.1) !important; border:1px solid rgba(255,255,255,0.2) !important; color:#fff !important; border-radius:8px !important; }
+.glass-input option { background:#1a1a2e; color:#fff; }
+</style>
+
+<script>
+async function predict() {
+    const crop = document.getElementById('crop').value;
+    const season = document.getElementById('season').value;
+    const rainfall = document.getElementById('rainfall').value;
+    const prev_price = document.getElementById('prev_price').value;
+    const production = document.getElementById('production').value;
+    const area = document.getElementById('area').value;
+    const export_demand = document.getElementById('export_demand').value;
+
+    if (!crop || !season || !rainfall || !prev_price || !production || !area || !export_demand) {
+        alert('Please fill all fields!');
+        return;
+    }
+
+    const response = await fetch('/demand_forecast', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ crop, season, rainfall, prev_price, production, area, export_demand })
+    });
+
+    const data = await response.json();
+    showResult(data.demand, crop);
+}
+
+function showResult(demand, crop) {
+    const card = document.getElementById('result-card');
+    const badge = document.getElementById('demand-badge');
+    const label = document.getElementById('demand-label');
+    const desc = document.getElementById('demand-desc');
+    const rec = document.getElementById('rec-text');
+
+    card.style.display = 'block';
+
+    const messages = {
+        High: {
+            color: '#4ade80', bg: 'rgba(74,222,128,0.2)',
+            desc: 'Strong market demand expected! Buyers are likely to pay premium prices.',
+            rec: `Great news! ${crop} is expected to have HIGH demand this season. This is the right time to increase cultivation area if possible. Consider booking advance contracts with buyers or mandis to lock in good prices. Export opportunities may also be strong.`
+        },
+        Medium: {
+            color: '#f59e0b', bg: 'rgba(245,158,11,0.2)',
+            desc: 'Moderate market demand expected. Stable prices likely.',
+            rec: `${crop} shows MEDIUM demand for this season. Prices are expected to be stable around MSP levels. This is a safe crop to grow. Focus on reducing input costs and improving yield quality to maximize returns.`
+        },
+        Low: {
+            color: '#fb7185', bg: 'rgba(251,113,133,0.2)',
+            desc: 'Low market demand expected. Prices may be under pressure.',
+            rec: `Caution: ${crop} shows LOW demand this season. Consider diversifying with another crop or reducing area under this crop. If you do grow it, focus on direct-to-consumer channels, FPOs, or value-added products to get better returns than open market.`
+        }
+    };
+
+    const m = messages[demand];
+    badge.style.background = m.bg;
+    label.style.color = m.color;
+    label.innerText = demand + ' Demand';
+    desc.innerText = m.desc;
+    rec.innerText = m.rec;
+
+    card.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+{% endblock %}

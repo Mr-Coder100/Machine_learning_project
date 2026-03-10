@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 style="color:#fff; font-size:2.5rem; font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,0.3);">
+            ⚖️ Fair Price Estimator
+        </h1>
+        <p style="color:rgba(255,255,255,0.85); font-size:1.1rem;">Check MSP rates and see if you're getting a fair deal</p>
+        <div style="background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); border-radius:10px; display:inline-block; padding:8px 20px; margin-top:10px;">
+            <small style="color:#f59e0b;">📅 MSP Data: 2024-25 Season (Government of India)</small>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="glass-card p-4 mb-4">
+                <h5 style="color:#4ade80; margin-bottom:20px;">Enter Your Details</h5>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Select Crop</label>
+                    <select id="crop" class="form-control glass-input" onchange="showMSP()">
+                        <option value="">-- Select Crop --</option>
+                        <option value="wheat">Wheat</option>
+                        <option value="rice">Paddy (Common)</option>
+                        <option value="maize">Maize</option>
+                        <option value="cotton_medium">Cotton (Medium Staple)</option>
+                        <option value="cotton_long">Cotton (Long Staple)</option>
+                        <option value="groundnut">Groundnut</option>
+                        <option value="soybean">Soybean</option>
+                        <option value="mustard">Rapeseed/Mustard</option>
+                        <option value="tur">Tur (Arhar)</option>
+                        <option value="moong">Moong (Green Gram)</option>
+                        <option value="urad">Urad (Black Gram)</option>
+                        <option value="gram">Gram (Chana)</option>
+                        <option value="jowar">Jowar (Hybrid)</option>
+                        <option value="bajra">Bajra</option>
+                        <option value="sunflower">Sunflower</option>
+                        <option value="sugarcane">Sugarcane (FRP)</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Your Selling Price (₹/Quintal)</label>
+                    <input type="number" id="selling_price" class="form-control glass-input" placeholder="Enter price you received" oninput="compare()">
+                </div>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Quantity Sold (Quintals)</label>
+                    <input type="number" id="quantity" class="form-control glass-input" placeholder="e.g. 50" oninput="compare()">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <!-- MSP Card -->
+            <div class="glass-card p-4 mb-4" id="msp-card" style="display:none;">
+                <h5 style="color:#4ade80; margin-bottom:15px;">📋 MSP Information</h5>
+                <div class="row text-center">
+                    <div class="col-4">
+                        <div style="background:rgba(96,165,250,0.15); border-radius:12px; padding:15px;">
+                            <div style="font-size:1.6rem; font-weight:800; color:#60a5fa;" id="msp-val"></div>
+                            <small style="color:rgba(255,255,255,0.7);">MSP (₹/Quintal)</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div style="background:rgba(74,222,128,0.15); border-radius:12px; padding:15px;">
+                            <div style="font-size:1.6rem; font-weight:800; color:#4ade80;" id="your-val">—</div>
+                            <small style="color:rgba(255,255,255,0.7);">Your Price</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div id="diff-box" style="background:rgba(255,255,255,0.1); border-radius:12px; padding:15px;">
+                            <div style="font-size:1.6rem; font-weight:800;" id="diff-val">—</div>
+                            <small style="color:rgba(255,255,255,0.7);">Difference</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Verdict -->
+                <div id="verdict" class="mt-4" style="display:none; text-align:center; padding:15px; border-radius:12px;">
+                    <div id="verdict-text" style="font-size:1.1rem; font-weight:700;"></div>
+                    <div id="verdict-sub" style="font-size:0.85rem; margin-top:5px; color:rgba(255,255,255,0.75);"></div>
+                </div>
+
+                <!-- Total gain/loss -->
+                <div id="total-section" class="mt-3" style="display:none;">
+                    <div style="background:rgba(255,255,255,0.08); border-radius:10px; padding:15px; text-align:center;">
+                        <div style="color:rgba(255,255,255,0.7); font-size:0.9rem;">Total Amount Received</div>
+                        <div id="total-received" style="font-size:1.4rem; font-weight:700; color:#fff;"></div>
+                        <div style="color:rgba(255,255,255,0.7); font-size:0.9rem; margin-top:8px;">If sold at MSP, you would have received</div>
+                        <div id="total-msp" style="font-size:1.4rem; font-weight:700; color:#60a5fa;"></div>
+                        <div id="total-diff-text" style="font-size:1rem; font-weight:600; margin-top:8px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All MSP Table -->
+            <div class="glass-card p-4">
+                <h5 style="color:#4ade80; margin-bottom:15px;">📊 All MSP Rates 2024-25</h5>
+                <div style="max-height:250px; overflow-y:auto;">
+                <table style="width:100%; color:rgba(255,255,255,0.9); font-size:0.88rem;">
+                    <thead>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.2);">
+                            <th style="padding:8px 0; color:#4ade80;">Crop</th>
+                            <th style="padding:8px 0; color:#4ade80; text-align:right;">MSP (₹/Qtl)</th>
+                            <th style="padding:8px 0; color:#4ade80; text-align:right;">Season</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);"><td style="padding:7px 0;">Wheat</td><td style="text-align:right;">2,275</td><td style="text-align:right; color:#60a5fa;">Rabi</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);"><td style="padding:7px 0;">Paddy (Common)</td><td style="text-align:right;">2,300</td><td style="text-align:right; color:#4ade80;">Kharif</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);"><td style="padding:7px 0;">Maize</td><td style="text-align:right;">2,225</td><td style="text-align:right; color:#4ade80;">Kharif</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);"><td style="padding:7px 0;">Cotton (Med. Staple)</td><td style="text-align:right;">7,121</td><td style="text-align:right; color:#4ade80;">Kharif</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);"><td style="padding:7px 0;">Cotton (Long Staple)</td><td style="text-align:right;">7,521</td><td style="text-align:right; color:#4ade80;">Kharif</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);"><td style="padding:7px 0;">Groundnut</td><td style="text-align:right;">6,783</td><td style="text-align:right; color:#4ade80;">Kharif</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);"><td style="padding:7px 0;">Soybean</td><td style="text-align:right;">4,892</td><td style="text-align:right; color:#4ade80;">Kharif</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);"><td style="padding:7px 0;">Rapeseed/Mustard</td><td style="text-align:right;">5,950</td><td style="text-align:right; color:#60a5fa;">Rabi</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);"><td style="padding:7px 0;">Tur (Arhar)</td><td style="text-align:right;">7,550</td><td style="text-align:right; color:#4ade80;">Kharif</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);"><td style="padding:7px 0;">Moong (Green Gram)</td><td style="text-align:right;">8,682</td><td style="text-align:right; color:#4ade80;">Kharif</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);"><td style="padding:7px 0;">Urad (Black Gram)</td><td style="text-align:right;">7,400</td><td style="text-align:right; color:#4ade80;">Kharif</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);"><td style="padding:7px 0;">Gram (Chana)</td><td style="text-align:right;">5,440</td><td style="text-align:right; color:#60a5fa;">Rabi</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);"><td style="padding:7px 0;">Jowar (Hybrid)</td><td style="text-align:right;">3,371</td><td style="text-align:right; color:#4ade80;">Kharif</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);"><td style="padding:7px 0;">Bajra</td><td style="text-align:right;">2,625</td><td style="text-align:right; color:#4ade80;">Kharif</td></tr>
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.07);"><td style="padding:7px 0;">Sunflower</td><td style="text-align:right;">7,280</td><td style="text-align:right; color:#4ade80;">Kharif</td></tr>
+                        <tr><td style="padding:7px 0;">Sugarcane (FRP)</td><td style="text-align:right;">340</td><td style="text-align:right; color:#4ade80;">Annual</td></tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.glass-card { background:rgba(0,0,0,0.45); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-radius:16px; border:1px solid rgba(255,255,255,0.15); box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+.glass-input { background:rgba(255,255,255,0.1) !important; border:1px solid rgba(255,255,255,0.2) !important; color:#fff !important; border-radius:8px !important; }
+.glass-input option { background:#1a1a2e; color:#fff; }
+</style>
+
+<script>
+const mspData = {
+    wheat: 2275, rice: 2300, maize: 2225, cotton_medium: 7121,
+    cotton_long: 7521, groundnut: 6783, soybean: 4892, mustard: 5950,
+    tur: 7550, moong: 8682, urad: 7400, gram: 5440,
+    jowar: 3371, bajra: 2625, sunflower: 7280, sugarcane: 340
+};
+
+function fmt(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
+
+function showMSP() {
+    const crop = document.getElementById('crop').value;
+    if (!crop) return;
+    document.getElementById('msp-val').innerText = fmt(mspData[crop]);
+    document.getElementById('msp-card').style.display = 'block';
+    compare();
+}
+
+function compare() {
+    const crop = document.getElementById('crop').value;
+    if (!crop) return;
+    const msp = mspData[crop];
+    const selling = parseFloat(document.getElementById('selling_price').value) || 0;
+    const qty = parseFloat(document.getElementById('quantity').value) || 0;
+
+    document.getElementById('your-val').innerText = selling > 0 ? fmt(selling) : '—';
+
+    if (selling > 0) {
+        const diff = selling - msp;
+        const diffBox = document.getElementById('diff-box');
+        const diffVal = document.getElementById('diff-val');
+        diffVal.innerText = (diff >= 0 ? '+' : '') + fmt(diff);
+        diffBox.style.background = diff >= 0 ? 'rgba(74,222,128,0.15)' : 'rgba(251,113,133,0.15)';
+        diffVal.style.color = diff >= 0 ? '#4ade80' : '#fb7185';
+
+        const verdict = document.getElementById('verdict');
+        const vtext = document.getElementById('verdict-text');
+        const vsub = document.getElementById('verdict-sub');
+        verdict.style.display = 'block';
+
+        if (diff >= 500) {
+            verdict.style.background = 'rgba(74,222,128,0.2)';
+            vtext.style.color = '#4ade80';
+            vtext.innerText = '✅ Excellent! You got well above MSP!';
+            vsub.innerText = `You earned ₹${Math.abs(diff).toLocaleString('en-IN')} extra per quintal above government guaranteed price.`;
+        } else if (diff >= 0) {
+            verdict.style.background = 'rgba(96,165,250,0.2)';
+            vtext.style.color = '#60a5fa';
+            vtext.innerText = '👍 Good! You received at or above MSP.';
+            vsub.innerText = 'Your price is fair. You got the minimum government guaranteed price.';
+        } else {
+            verdict.style.background = 'rgba(251,113,133,0.2)';
+            vtext.style.color = '#fb7185';
+            vtext.innerText = '⚠️ Below MSP! You may have been underpaid.';
+            vsub.innerText = `You received ₹${Math.abs(diff).toLocaleString('en-IN')} less per quintal than the government MSP. Consider selling through APMC mandi.`;
+        }
+    }
+
+    if (qty > 0 && selling > 0) {
+        const msp = mspData[crop];
+        const totalReceived = selling * qty;
+        const totalMSP = msp * qty;
+        const totalDiff = totalReceived - totalMSP;
+
+        document.getElementById('total-section').style.display = 'block';
+        document.getElementById('total-received').innerText = fmt(totalReceived);
+        document.getElementById('total-msp').innerText = fmt(totalMSP);
+
+        const tdiff = document.getElementById('total-diff-text');
+        if (totalDiff >= 0) {
+            tdiff.style.color = '#4ade80';
+            tdiff.innerText = `You earned ₹${totalDiff.toLocaleString('en-IN')} MORE than MSP total 🎉`;
+        } else {
+            tdiff.style.color = '#fb7185';
+            tdiff.innerText = `You lost ₹${Math.abs(totalDiff).toLocaleString('en-IN')} compared to MSP total ⚠️`;
+        }
+    }
+}
+</script>
+{% endblock %}

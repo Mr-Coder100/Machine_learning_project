@@ -1,36 +1,134 @@
 <nav class="navbar fixed-top navbar-expand-lg glass-nav shadow-sm">
     <style>
-.navbar .nav-link:hover {
-    color: rgba(100, 180, 255, 0.9) !important;
-    background: rgba(0, 123, 255, 0.15) !important;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-}
-</style>
-    <div class="container-fluid d-flex justify-content-between align-items-center px-0">
-        <!-- BRAND - LEFT SIDE -->
+    .navbar .nav-link:hover {
+        color: rgba(100, 180, 255, 0.9) !important;
+        background: rgba(0, 123, 255, 0.15) !important;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+    .dropdown-menu {
+        background: rgba(15, 15, 30, 0.95) !important;
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255,255,255,0.15) !important;
+        border-radius: 12px !important;
+    }
+    .dropdown-item {
+        color: rgba(255,255,255,0.85) !important;
+        padding: 8px 20px;
+    }
+    .dropdown-item:hover {
+        background: rgba(0,123,255,0.2) !important;
+        color: rgba(100,180,255,0.9) !important;
+        border-radius: 6px;
+    }
 
-        <!-- Toggle button (mobile) -->
+.nav-login {
+    margin-left: auto;
+    border: 1px solid rgba(0, 123, 255, 0.7) !important;
+    border-radius: 8px;
+    padding: 4px 14px !important;
+    color: #0096ff !important;
+}
+.nav-login:hover {
+    background: rgba(0, 123, 255, 0.25) !important;
+    border-color: #0096ff !important;
+    color: #fff !important;
+}
+    .nav-link.active{
+    font-weight:600;
+    border-bottom:2px solid #4CAF50;
+    }
+#navbarMenu {
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 14px;
+    padding: 6px 16px;
+    margin-top: 4px;
+}
+.navbar-nav .nav-item {
+    margin: 0 6px;
+}
+    .nav-login:hover {
+        background: rgba(0,123,255,0.3) !important;
+        border-color: rgba(100,180,255,0.8) !important;
+    }
+    </style>
+
+    <div class="container-fluid px-3">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu">
             <span class="fas fa-bars" style="color:#333;"></span>
-
         </button>
 
-        <!-- Menu - RIGHT SIDE -->
-        <div class="collapse navbar-collapse justify-content-end" id="navbarMenu">
-            <ul class="navbar-nav d-flex align-items-center" id="navItems">
+        <div class="collapse navbar-collapse" id="navbarMenu">
+            <ul class="navbar-nav mr-auto align-items-center">
+
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">HOME</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('homepage') }}">WEATHER</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('chart') }}">CHARTS</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('yield_prediction') }}">YIELD PREDICTION</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('crop_prediction') }}">CROP RECOMMENDATION</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('fertilizer') }}">FERTILIZER</a></li>
-                <li class="nav-item"><a class="nav-link" href="/economic">Economic Analysis</a></li>
-                <li class="nav-item"><a class="nav-link" href="/sustainable">Sustainable Farming</a></li>
-                <li class="nav-item"><a class="nav-link" href="/events">Farmer Events</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">LOGIN</a></li>
+
+                <!-- Predictions Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="predDropdown" role="button" data-toggle="dropdown">
+                         SMART PREDICTIONS
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="predDropdown">
+                        <a class="dropdown-item" href="{{ url_for('yield_prediction') }}">🌾 Yield Prediction</a>
+                        <a class="dropdown-item" href="{{ url_for('crop_prediction') }}">🌱 Crop Recommendation</a>
+                        <a class="dropdown-item" href="{{ url_for('fertilizer') }}">🧪 Fertilizer</a>
+                        <a class="dropdown-item" href="/demand_forecast">📊 Demand Forecast</a>
+                    </div>
+                </li>
+
+                <!-- Finance Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="finDropdown" role="button" data-toggle="dropdown">
+                        FINANCE
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="finDropdown">
+                        <a class="dropdown-item" href="/investment_estimator">💰 Investment Estimator</a>
+                        <a class="dropdown-item" href="/profit_calculator">📈 Profit Calculator</a>
+                        <a class="dropdown-item" href="/fair_price">⚖️ Fair Price (MSP)</a>
+                        <a class="dropdown-item" href="/economic">🏦 Economic Analysis</a>
+                    </div>
+                </li>
+
+                <li class="nav-item"><a class="nav-link" href="/sustainable">SUSTAINABLE FARMING</a></li>
+                <li class="nav-item"><a class="nav-link" href="/events">FARMER EVENTS</a></li>
+
+            </ul>
+
+            <!-- LOGIN pinned to extreme right -->
+            <!--<ul class="navbar-nav align-items-center">
+        -->
+
+        <ul class="navbar-nav align-items-center" style="list-style:none">
+    {% if session.get('logged_in') %}
+    <li class="nav-item d-flex align-items-center" style="gap:8px;">
+        <img src="{{ url_for('static', filename='images/lokesh.png') }}"
+             onerror="this.src='https://ui-avatars.com/api/?name=Lokesh&background=0096ff&color=fff&rounded=true'"
+             style="width:34px;height:34px;border-radius:50%;border:0.5px solid #000000;object-fit:cover;">
+        <span style="color:#0096ff;font-weight:600;">Lokesh</span>
+        <a class="nav-link" href="{{ url_for('logout') }}" style="color:rgba(255,100,100,0.9);font-size:0.8rem;padding:2px 8px;border:1px solid rgba(255,100,100,0.4);border-radius:6px;margin-left:4px;">LOGOUT</a>
+    </li>
+    {% else %}
+    <li class="nav-item">
+        <a class="nav-link nav-login" href="{{ url_for('login') }}">LOGIN</a>
+    </li>
+    {% endif %}
+</ul>
+
+
+   <!--<ul class="navbar-nav align-items-center" style="list-style:none">
+    <li class="nav-item">
+        <a class="nav-link nav-login" href="{{ url_for('login') }}">LOGIN</a>
+    </li>
+</ul> -->
+                
+                <!-- 
+                <li class="nav-item">
+                    <a class="btn btn-primary ms-3 px-4" href="{{ url_for('login') }}">LOGIN</a>
+                </li>
+                 -->
             </ul>
         </div>
-
     </div>
 </nav>

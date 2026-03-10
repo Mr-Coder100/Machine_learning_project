@@ -76,36 +76,21 @@ label {
 
 <!-- GLASS LOGIN FORM -->
 <div class="form-box">
-
+    {% if error %}
+<div style="color:red; text-align:center; margin-bottom:10px;">{{ error }}</div>
+{% endif %}
+    <!--<label><b>Username</b></label> -->
+   <form method="POST" action="/login">
     <label><b>Username</b></label>
-    <input type="text" id="uname" class="glass-input" placeholder="Enter username">
-
+    <input type="text" name="username" class="glass-input" placeholder="Enter username">
     <br><br>
-
     <label><b>Password</b></label>
-    <input type="password" id="pwd" class="glass-input" placeholder="Enter password">
-
+    <input type="password" name="password" class="glass-input" placeholder="Enter password">
     <br><br>
-
     <center>
-        <button class="glass-main-btn" onclick="login()">Login</button>
+        <button type="submit" class="glass-main-btn">Login</button>
     </center>
-
+</form>
 </div>
-
-<!-- Login Script -->
-<script>
-function login() {
-    var uname = document.getElementById("uname").value;
-    var pwd = document.getElementById("pwd").value;
-
-    if (uname === "admin" && pwd === "admin") {
-        alert("Login Success!");
-        window.location = "{{ url_for('upload') }}";
-    } else {
-        alert("Invalid Credentials!");
-    }
-}
-</script>
 
 {% endblock %}

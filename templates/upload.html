@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Page Title -->
+<h1 class="page-title text-center">Upload Dataset</h1>
+
+<style>
+/* Page Title */
+.page-title {
+    font-size: 42px;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    margin-top: 140px;
+    margin-bottom: 30px;
+}
+
+/* Glass Form Box */
+.glass-upload-box {
+    max-width: 550px;
+    margin: auto;
+    padding: 30px;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.35);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    text-align: center;
+}
+
+/* Label */
+label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+}
+
+/* Glass File Input */
+.glass-file-input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.45);
+    color: #fff;
+    margin-top: 10px;
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+}
+
+/* Upload Button */
+.glass-main-btn {
+    margin-top: 25px;
+    padding: 12px 40px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff !important;
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.45);
+    backdrop-filter: blur(12px);
+    transition: 0.3s ease-in-out;
+}
+
+.glass-main-btn:hover {
+    background: linear-gradient(135deg, #4eae3a, #5ccf4e);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76,175,80,0.45);
+}
+
+/* Page Divider */
+.divider {
+    margin-top: 40px;
+    border: none;
+    height: 1px;
+    background: rgba(255,255,255,0.25);
+}
+</style>
+
+<!-- Upload Box -->
+<div class="glass-upload-box">
+
+    <form action="{{ url_for('preview') }}" method="POST" enctype="multipart/form-data">
+
+        <label><b>Select Dataset File</b></label>
+
+        <input
+            type="file"
+            name="datasetfile"
+            id="file1"
+            required
+            class="glass-file-input"
+        >
+
+        <button type="submit" class="glass-main-btn">Upload</button>
+
+    </form>
+
+</div>
+
+<hr class="divider">
+
+{% endblock %}

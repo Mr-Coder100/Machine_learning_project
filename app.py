@@ -5,10 +5,13 @@ from flask import request
 import numpy as np
 import pickle
 import pandas as pd
-from flask import Flask, render_template, request, redirect, url_for
+
+from flask import Flask, render_template, flash, redirect, request, url_for, jsonify, session
 from weather import Weather, WeatherException
 import requests
+
 app = Flask(__name__)
+app.secret_key = 'agroguide_secret_key'
 
 app.config.from_pyfile('config/config.cfg')
 w = Weather(app.config)
@@ -18,14 +21,91 @@ crop = pickle.load(open('crop.pkl', 'rb'))
 fertilizer_model    = pickle.load(open('fertilizer.pkl', 'rb'))
 fertilizer_encoders = pickle.load(open('fertilizer_encoders.pkl', 'rb'))
 
+demand_model = pickle.load(open('demand_model.pkl', 'rb'))
+demand_encoders = pickle.load(open('demand_encoders.pkl', 'rb'))
+
 @app.route('/')
+def home():
+    return redirect(url_for('index'))
+
+
+# ============================================================
+# ROUTE 1: Crop Investment Estimator
+# ============================================================
+@app.route('/investment_estimator')
+def investment_estimator():
+    return render_template('investment_estimator.html')
+
+
+# ============================================================
+# ROUTE 2: Fair Price Estimator
+# ============================================================
+@app.route('/fair_price')
+def fair_price():
+    return render_template('fair_price.html')
+
+
+# ============================================================
+# ROUTE 3: Investment vs Profit Calculator
+# ============================================================
+@app.route('/profit_calculator')
+def profit_calculator():
+    return render_template('profit_calculator.html')
+
+
+# ============================================================
+# ROUTE 4: Demand Forecasting (page + API)
+# ============================================================
+@app.route('/demand_forecast', methods=['GET', 'POST'])
+def demand_forecast_page():
+    if request.method == 'POST':
+        try:
+            data = request.get_json()
+            crop_name = data['crop']
+            season = data['season']
+            rainfall = float(data['rainfall'])
+            prev_price = float(data['prev_price'])
+            production = float(data['production'])
+            area = float(data['area'])
+            export_demand = float(data['export_demand'])
+
+            crop_enc = demand_encoders['crop'].transform([crop_name])[0]
+            season_enc = demand_encoders['season'].transform([season])[0]
+
+            features = np.array([[crop_enc, season_enc, rainfall, prev_price, production, area, export_demand]])
+            pred = demand_model.predict(features)[0]
+            result = demand_encoders['demand'].inverse_transform([pred])[0]
+
+            return jsonify({'demand': result})
+        except Exception as e:
+            return jsonify({'demand': 'Medium', 'error': str(e)})
+    return render_template('demand_forecast.html')
 
 @app.route('/index') 
 def index():
 	return render_template('index.html')
-@app.route('/login') 
+
+
+@app.route('/login', methods=['GET', 'POST'])
+
 def login():
-	return render_template('login.html')    
+    error = None
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if username == 'MrCoder100' and password == 'msit1234':
+            session['logged_in'] = True
+            session['username'] = 'Lokesh'
+            return redirect(url_for('index'))
+        else:
+            error = 'Invalid credentials!'
+    return render_template('login.html', error=error)
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
 @app.route('/chart') 
 def chart():
 	return render_template('chart.html')
@@ -116,9 +196,9 @@ def fertilizer():
             error = f"Error: {e}"
 
     return render_template('fertilizer.html', result=result, error=error)   
-@app.route('/upload') 
-def upload():
-	return render_template('upload.html') 
+# @app.route('/upload') 
+# def upload():
+# 	return render_template('upload.html') 
 @app.route('/preview',methods=["POST"])
 def preview():
     if request.method == 'POST':

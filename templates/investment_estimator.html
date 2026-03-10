@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 style="color:#fff; font-size:2.5rem; font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,0.3);">
+            🌱 Crop Investment Estimator
+        </h1>
+        <p style="color:rgba(255,255,255,0.85); font-size:1.1rem;">Estimate your total farming cost before you invest</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="glass-card p-4 mb-4">
+                <h5 style="color:#4ade80; margin-bottom:20px;">Enter Details</h5>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Select Crop</label>
+                    <select id="crop" class="form-control glass-input" onchange="calculate()">
+                        <option value="">-- Select Crop --</option>
+                        <option value="wheat">Wheat</option>
+                        <option value="rice">Rice</option>
+                        <option value="maize">Maize</option>
+                        <option value="cotton">Cotton</option>
+                        <option value="sugarcane">Sugarcane</option>
+                        <option value="pulses">Pulses</option>
+                        <option value="mustard">Mustard</option>
+                        <option value="soybean">Soybean</option>
+                        <option value="groundnut">Groundnut</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Land Area (in Acres)</label>
+                    <input type="number" id="area" class="form-control glass-input" placeholder="e.g. 5" min="0.5" oninput="calculate()">
+                </div>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Irrigation Type</label>
+                    <select id="irrigation" class="form-control glass-input" onchange="calculate()">
+                        <option value="rainfed">Rainfed (No cost)</option>
+                        <option value="drip">Drip Irrigation</option>
+                        <option value="flood">Flood Irrigation</option>
+                        <option value="sprinkler">Sprinkler</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="glass-card p-4 mb-4" id="result-card" style="display:none;">
+                <h5 style="color:#4ade80; margin-bottom:20px;">💰 Cost Breakdown</h5>
+                <table style="width:100%; color:rgba(255,255,255,0.9);">
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <td style="padding:10px 0;">🌾 Seeds</td>
+                        <td id="seed-cost" style="text-align:right; color:#60a5fa;"></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <td style="padding:10px 0;">🧪 Fertilizers</td>
+                        <td id="fertilizer-cost" style="text-align:right; color:#60a5fa;"></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <td style="padding:10px 0;">🐛 Pesticides</td>
+                        <td id="pesticide-cost" style="text-align:right; color:#60a5fa;"></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <td style="padding:10px 0;">👷 Labor</td>
+                        <td id="labor-cost" style="text-align:right; color:#60a5fa;"></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <td style="padding:10px 0;">💧 Irrigation</td>
+                        <td id="irrigation-cost" style="text-align:right; color:#60a5fa;"></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <td style="padding:10px 0;">🚜 Machinery</td>
+                        <td id="machinery-cost" style="text-align:right; color:#60a5fa;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:12px 0; font-weight:700; font-size:1.1rem;">Total Estimated Cost</td>
+                        <td id="total-cost" style="text-align:right; color:#4ade80; font-weight:700; font-size:1.2rem;"></td>
+                    </tr>
+                </table>
+                <p style="color:rgba(255,255,255,0.5); font-size:0.78rem; margin-top:15px;">* Estimates based on average Indian market rates. Actual costs may vary by region.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.glass-card {
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.glass-input {
+    background: rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+}
+.glass-input option { background: #1a1a2e; color: #fff; }
+</style>
+
+<script>
+const cropData = {
+    wheat:     { seed: 2500, fertilizer: 4000, pesticide: 1500, labor: 6000, machinery: 3500 },
+    rice:      { seed: 3000, fertilizer: 5000, pesticide: 2000, labor: 8000, machinery: 4000 },
+    maize:     { seed: 2000, fertilizer: 3500, pesticide: 1200, labor: 5000, machinery: 3000 },
+    cotton:    { seed: 4000, fertilizer: 6000, pesticide: 4000, labor: 10000, machinery: 4500 },
+    sugarcane: { seed: 8000, fertilizer: 7000, pesticide: 2500, labor: 12000, machinery: 5000 },
+    pulses:    { seed: 2200, fertilizer: 2500, pesticide: 1000, labor: 4500, machinery: 2500 },
+    mustard:   { seed: 1800, fertilizer: 3000, pesticide: 1000, labor: 4000, machinery: 2800 },
+    soybean:   { seed: 2500, fertilizer: 3200, pesticide: 1500, labor: 5000, machinery: 3000 },
+    groundnut: { seed: 3500, fertilizer: 3500, pesticide: 1800, labor: 7000, machinery: 3200 },
+};
+
+const irrigationCost = { rainfed: 0, drip: 8000, flood: 3000, sprinkler: 5000 };
+
+function fmt(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
+
+function calculate() {
+    const crop = document.getElementById('crop').value;
+    const area = parseFloat(document.getElementById('area').value) || 0;
+    const irr = document.getElementById('irrigation').value;
+
+    if (!crop || area <= 0) return;
+
+    const d = cropData[crop];
+    const seed = d.seed * area;
+    const fert = d.fertilizer * area;
+    const pest = d.pesticide * area;
+    const labor = d.labor * area;
+    const irrcost = irrigationCost[irr] * area;
+    const mach = d.machinery * area;
+    const total = seed + fert + pest + labor + irrcost + mach;
+
+    document.getElementById('seed-cost').innerText = fmt(seed);
+    document.getElementById('fertilizer-cost').innerText = fmt(fert);
+    document.getElementById('pesticide-cost').innerText = fmt(pest);
+    document.getElementById('labor-cost').innerText = fmt(labor);
+    document.getElementById('irrigation-cost').innerText = fmt(irrcost);
+    document.getElementById('machinery-cost').innerText = fmt(mach);
+    document.getElementById('total-cost').innerText = fmt(total);
+    document.getElementById('result-card').style.display = 'block';
+}
+</script>
+{% endblock %}

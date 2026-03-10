@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 style="color:#fff; font-size:2.5rem; font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,0.3);">
+            📈 Investment vs Profit Calculator
+        </h1>
+        <p style="color:rgba(255,255,255,0.85); font-size:1.1rem;">Know your expected profit before the season starts</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="glass-card p-4 mb-4">
+                <h5 style="color:#4ade80; margin-bottom:20px;">🌾 Crop Details</h5>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Select Crop</label>
+                    <select id="crop" class="form-control glass-input" onchange="autofill()">
+                        <option value="">-- Select Crop --</option>
+                        <option value="wheat">Wheat</option>
+                        <option value="rice">Rice (Paddy)</option>
+                        <option value="maize">Maize</option>
+                        <option value="cotton">Cotton</option>
+                        <option value="sugarcane">Sugarcane</option>
+                        <option value="pulses">Pulses</option>
+                        <option value="mustard">Mustard</option>
+                        <option value="soybean">Soybean</option>
+                        <option value="groundnut">Groundnut</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Land Area (Acres)</label>
+                    <input type="number" id="area" class="form-control glass-input" placeholder="e.g. 5" oninput="calculate()">
+                </div>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Total Investment (₹) <small style="color:rgba(255,255,255,0.5);">auto-filled, editable</small></label>
+                    <input type="number" id="investment" class="form-control glass-input" placeholder="Total cost in ₹" oninput="calculate()">
+                </div>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Expected Yield (Quintals/Acre)</label>
+                    <input type="number" id="yield_val" class="form-control glass-input" placeholder="e.g. 20" oninput="calculate()">
+                </div>
+
+                <div class="mb-3">
+                    <label style="color:rgba(255,255,255,0.85);">Expected Selling Price (₹/Quintal)</label>
+                    <input type="number" id="price" class="form-control glass-input" placeholder="e.g. 2300" oninput="calculate()">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <div class="glass-card p-4 mb-4" id="result-card" style="display:none;">
+                <h5 style="color:#4ade80; margin-bottom:20px;">📊 Profit Analysis</h5>
+
+                <div class="row text-center mb-4">
+                    <div class="col-4">
+                        <div style="background:rgba(251,113,133,0.15); border-radius:12px; padding:15px;">
+                            <div style="font-size:1.4rem; font-weight:800; color:#fb7185;" id="total-investment"></div>
+                            <small style="color:rgba(255,255,255,0.7);">Total Investment</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div style="background:rgba(96,165,250,0.15); border-radius:12px; padding:15px;">
+                            <div style="font-size:1.4rem; font-weight:800; color:#60a5fa;" id="total-revenue"></div>
+                            <small style="color:rgba(255,255,255,0.7);">Expected Revenue</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div id="profit-box" style="border-radius:12px; padding:15px;">
+                            <div style="font-size:1.4rem; font-weight:800;" id="net-profit"></div>
+                            <small style="color:rgba(255,255,255,0.7);" id="profit-label">Net Profit</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Breakdown -->
+                <table style="width:100%; color:rgba(255,255,255,0.9); font-size:0.9rem;">
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <td style="padding:9px 0;">Total Yield</td>
+                        <td id="total-yield" style="text-align:right; color:#60a5fa;"></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <td style="padding:9px 0;">Revenue per Acre</td>
+                        <td id="rev-per-acre" style="text-align:right; color:#60a5fa;"></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <td style="padding:9px 0;">Cost per Acre</td>
+                        <td id="cost-per-acre" style="text-align:right; color:#fb7185;"></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <td style="padding:9px 0;">Profit per Acre</td>
+                        <td id="profit-per-acre" style="text-align:right; font-weight:700;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:9px 0;">Return on Investment (ROI)</td>
+                        <td id="roi" style="text-align:right; font-weight:700; font-size:1.1rem;"></td>
+                    </tr>
+                </table>
+
+                <!-- Verdict -->
+                <div id="verdict" class="mt-4" style="text-align:center; padding:15px; border-radius:12px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.glass-card { background:rgba(0,0,0,0.45); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-radius:16px; border:1px solid rgba(255,255,255,0.15); box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+.glass-input { background:rgba(255,255,255,0.1) !important; border:1px solid rgba(255,255,255,0.2) !important; color:#fff !important; border-radius:8px !important; }
+.glass-input option { background:#1a1a2e; color:#fff; }
+</style>
+
+<script>
+const cropDefaults = {
+    wheat:     { cost: 20800, yield: 18, price: 2275 },
+    rice:      { cost: 27000, yield: 22, price: 2300 },
+    maize:     { cost: 18200, yield: 20, price: 2225 },
+    cotton:    { cost: 32500, yield: 12, price: 7121 },
+    sugarcane: { cost: 41000, yield: 280, price: 340 },
+    pulses:    { cost: 17700, yield: 8, price: 7400 },
+    mustard:   { cost: 16600, yield: 10, price: 5950 },
+    soybean:   { cost: 18200, yield: 12, price: 4892 },
+    groundnut: { cost: 22000, yield: 15, price: 6783 },
+};
+
+function fmt(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
+
+function autofill() {
+    const crop = document.getElementById('crop').value;
+    if (!crop) return;
+    const d = cropDefaults[crop];
+    const area = parseFloat(document.getElementById('area').value) || 1;
+    document.getElementById('investment').value = Math.round(d.cost * area);
+    document.getElementById('yield_val').value = d.yield;
+    document.getElementById('price').value = d.price;
+    calculate();
+}
+
+function calculate() {
+    const area = parseFloat(document.getElementById('area').value) || 0;
+    const investment = parseFloat(document.getElementById('investment').value) || 0;
+    const yieldPerAcre = parseFloat(document.getElementById('yield_val').value) || 0;
+    const price = parseFloat(document.getElementById('price').value) || 0;
+
+    if (area <= 0 || investment <= 0 || yieldPerAcre <= 0 || price <= 0) return;
+
+    const totalYield = yieldPerAcre * area;
+    const totalRevenue = totalYield * price;
+    const netProfit = totalRevenue - investment;
+    const roi = ((netProfit / investment) * 100).toFixed(1);
+    const profitPerAcre = netProfit / area;
+
+    document.getElementById('total-investment').innerText = fmt(investment);
+    document.getElementById('total-revenue').innerText = fmt(totalRevenue);
+    document.getElementById('net-profit').innerText = (netProfit >= 0 ? '+' : '') + fmt(netProfit);
+    document.getElementById('total-yield').innerText = totalYield.toLocaleString('en-IN') + ' Quintals';
+    document.getElementById('rev-per-acre').innerText = fmt(totalRevenue / area);
+    document.getElementById('cost-per-acre').innerText = fmt(investment / area);
+    document.getElementById('profit-per-acre').innerText = (profitPerAcre >= 0 ? '+' : '') + fmt(profitPerAcre);
+    document.getElementById('roi').innerText = roi + '%';
+
+    const profitBox = document.getElementById('profit-box');
+    const profitEl = document.getElementById('net-profit');
+    const roiEl = document.getElementById('roi');
+    const verdict = document.getElementById('verdict');
+
+    if (netProfit >= 0) {
+        profitBox.style.background = 'rgba(74,222,128,0.15)';
+        profitEl.style.color = '#4ade80';
+        roiEl.style.color = '#4ade80';
+        document.getElementById('profit-per-acre').style.color = '#4ade80';
+        if (parseFloat(roi) >= 30) {
+            verdict.style.background = 'rgba(74,222,128,0.2)';
+            verdict.innerHTML = '<span style="color:#4ade80; font-size:1.1rem; font-weight:700;">🚀 Highly Profitable!</span><br><small style="color:rgba(255,255,255,0.75);">ROI above 30% — excellent farming decision!</small>';
+        } else {
+            verdict.style.background = 'rgba(96,165,250,0.2)';
+            verdict.innerHTML = '<span style="color:#60a5fa; font-size:1.1rem; font-weight:700;">👍 Profitable Investment</span><br><small style="color:rgba(255,255,255,0.75);">You are expected to make a positive return this season.</small>';
+        }
+    } else {
+        profitBox.style.background = 'rgba(251,113,133,0.15)';
+        profitEl.style.color = '#fb7185';
+        roiEl.style.color = '#fb7185';
+        document.getElementById('profit-per-acre').style.color = '#fb7185';
+        verdict.style.background = 'rgba(251,113,133,0.2)';
+        verdict.innerHTML = '<span style="color:#fb7185; font-size:1.1rem; font-weight:700;">⚠️ Expected Loss!</span><br><small style="color:rgba(255,255,255,0.75);">Consider reducing costs or choosing a different crop for better returns.</small>';
+    }
+
+    document.getElementById('result-card').style.display = 'block';
+}
+</script>
+{% endblock %}
