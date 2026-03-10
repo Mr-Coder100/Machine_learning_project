@@ -17,14 +17,12 @@ app.config.from_pyfile('config/config.cfg')
 w = Weather(app.config)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-model = pickle.load(open('yield.pkl', 'rb'))
-crop = pickle.load(open('crop.pkl', 'rb'))
-fertilizer_model    = pickle.load(open('fertilizer.pkl', 'rb'))
-fertilizer_encoders = pickle.load(open('fertilizer_encoders.pkl', 'rb'))
-
-demand_model = pickle.load(open('demand_model.pkl', 'rb'))
-demand_encoders = pickle.load(open('demand_encoders.pkl', 'rb'))
+model = pickle.load(open(os.path.join(BASE_DIR, 'yield.pkl'), 'rb'))
+crop = pickle.load(open(os.path.join(BASE_DIR, 'crop.pkl'), 'rb'))
+fertilizer_model = pickle.load(open(os.path.join(BASE_DIR, 'fertilizer.pkl'), 'rb'))
+fertilizer_encoders = pickle.load(open(os.path.join(BASE_DIR, 'fertilizer_encoders.pkl'), 'rb'))
+demand_model = pickle.load(open(os.path.join(BASE_DIR, 'demand_model.pkl'), 'rb'))
+demand_encoders = pickle.load(open(os.path.join(BASE_DIR, 'demand_encoders.pkl'), 'rb'))
 
 @app.route('/')
 def home():
